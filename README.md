@@ -138,7 +138,7 @@ python script.py
 
 ## 🧼 Limpeza
 
-Após a execução, todos os arquivos de áudio, transcrição e Markdown são automaticamente removidos da pasta `aulas_processadas`.
+Após a execução, todos os arquivos de áudio, transcrição e Markdown são automaticamente movidos para a pasta `aulas_processadas`.
 
 ---
 
