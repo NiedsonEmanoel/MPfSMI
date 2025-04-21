@@ -137,8 +137,8 @@ python transcrever.py --arquivo "meuaudio.mp3" --modelo medium
 | `tiny`   | Leve    | Baixa     | Muito rápido |
 | `base`   | Médio   | OK        | Rápido       |
 | `small`  | Bom     | Boa       | Ok           |
-| `medium` | Grande  | Muito boa | Mais lento   |
-| `large`  | Enorme  | Excelente | Lento (sem GPU) |
+| `medium` | Grande  | Muito boa | Um pouco lento   |
+| `large`  | Enorme  | Excelente | Lento  |
 
 ---
 
