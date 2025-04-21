@@ -22,11 +22,12 @@ Ideal para gerar **resumos**, **flashcards**, **perguntas**, ou **legendas sincr
 - Python 3.8+
 - [`torch`](https://pytorch.org/)
 - [`openai-whisper`](https://github.com/openai/whisper)
+- [`ntlk`](https://pypi.org/project/nltk/)
 
 Instale com:
 
 ```bash
-pip install torch openai-whisper
+pip install torch openai-whisper nltk
 ```
 
 Ou via `requirements.txt`:
