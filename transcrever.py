@@ -1,4 +1,5 @@
 import whisper
+import argparse
 import os
 import hashlib
 from datetime import datetime
@@ -72,6 +73,14 @@ notion_style = """
 headers = {
     "Content-Type": "application/json"
 }
+
+def argumentos_cli():
+    parser = argparse.ArgumentParser(description="Transcrição e resumo de aulas com Whisper + Gemini")
+
+    parser.add_argument('--audio', type=str, help='Caminho para o arquivo de áudio a ser processado')
+    parser.add_argument('--modelo', type=str, default='base', help='Modelo do Whisper a ser usado (base, small, medium, large, etc.)')
+
+    return parser.parse_args()
 
 def gerar_pdf_markdown(markdown_text, pasta_destino):
     nome_pdf = "resumo.pdf"
@@ -149,10 +158,6 @@ def remover_stopwords(texto):
     ]
     return " ".join(palavras_filtradas)
 
-def gerar_hash_arquivo(caminho_audio):
-    with open(caminho_audio, 'rb') as f:
-        return hashlib.sha256(f.read()).hexdigest()
-
 def transcrever_audio(caminho_audio, modelo="base", exportar=True, dispositivo="cpu"):
     if not os.path.exists(caminho_audio):
         raise FileNotFoundError(f"Arquivo não encontrado: {caminho_audio}")
@@ -223,16 +228,18 @@ def escolher_arquivo_audio(diretorio):
 
 # 🧪 Execução direta
 if __name__ == "__main__":
+    args = argumentos_cli()
     diretorio = "."  
-    arquivo_audio = escolher_arquivo_audio(diretorio)
+    arquivo_audio = args.audio if args.audio else escolher_arquivo_audio(diretorio)
 
     if arquivo_audio:
         caminho_audio = os.path.join(diretorio, arquivo_audio)
-        modelo = "medium"
+        modelo = args.modelo
         dispositivo = escolher_dispositivo()
 
-        hash_audio = gerar_hash_arquivo(caminho_audio)
-        pasta_destino = os.path.join("aulas_processadas", hash_audio)
+        # Usa o nome do arquivo de áudio (sem extensão) para criar a pasta
+        nome_arquivo_sem_ext = os.path.splitext(arquivo_audio)[0]
+        pasta_destino = os.path.join("aulas_processadas", nome_arquivo_sem_ext)
 
         if os.path.exists(pasta_destino):
             print(f"⚠️ Esta aula já foi processada anteriormente: {pasta_destino}")
@@ -244,7 +251,7 @@ if __name__ == "__main__":
                 gerar_pdf_markdown(resumoMD, pasta_destino)
 
                 # Mover os arquivos usados para a pasta destino
-                mover_arquivos_processados(pasta_destino, os.path.splitext(arquivo_audio)[0])
+                mover_arquivos_processados(pasta_destino, nome_arquivo_sem_ext)
 
             except Exception as erro:
                 print(f"❌ Erro: {erro}")
