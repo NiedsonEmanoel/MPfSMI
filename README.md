@@ -1,6 +1,6 @@
 # 🎧 Audio to Resume
 
-Transcreva áudios automaticamente com organização em parágrafos e exportação com ou sem timestamps — usando o poderoso modelo Whisper da OpenAI.
+Transcreva áudios automaticamente com organização em parágrafos e exportação com ou sem timestamps — usando o modelo Whisper da OpenAI.
 
 Ideal para gerar **resumos**, **flashcards**, **perguntas**, ou **legendas sincronizadas** com base em áudios de aulas, entrevistas ou qualquer outro conteúdo falado.
 
