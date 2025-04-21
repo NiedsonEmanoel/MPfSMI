@@ -156,4 +156,4 @@ Este projeto é de uso pessoal/educacional. Verifique os termos de uso das APIs 
 
 ## 👨‍💻 Autor
 
-Feito com ☕ e 🧠 por \*Niedson Emanoel\*, para me ajudar nas aulas de medicina — e agora pode ajudar você também!
+Feito com ☕ e 🧠 por Niedson Emanoel, para me ajudar nas aulas de medicina — e agora pode ajudar você também!
