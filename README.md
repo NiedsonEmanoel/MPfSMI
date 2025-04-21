@@ -1,136 +1,159 @@
 # 🎧 Audio to Resume
 
-Transcreva áudios automaticamente com organização em parágrafos e exportação com ou sem timestamps — usando o modelo Whisper da OpenAI.
-
-Ideal para gerar **resumos**, **flashcards**, **perguntas**, ou **legendas sincronizadas** com base em áudios de aulas, entrevistas ou qualquer outro conteúdo falado.
+Este projeto permite transcrever áudios (como aulas, reuniões, entrevistas) usando o modelo [`whisper`](https://github.com/openai/whisper), gerar um resumo didático em Markdown com a API Gemini da Google, e exportar o conteúdo final como PDF estilizado no padrão visual do Notion.
 
 ---
 
-## 🚀 Funcionalidades
+## ✅ Funcionalidades
 
-- ✅ Transcrição automática de arquivos `.mp3`, `.wav`, `.m4a`, etc.
-- ✅ Divisão inteligente em parágrafos.
-- ✅ Exportação em `.txt` com e sem timestamps.
-- ✅ Escolha do modelo Whisper (de `tiny` a `large`) via terminal.
-- ✅ Suporte a CUDA (GPU) ou CPU, escolhido automaticamente.
-- ✅ Pronto para integração com GPT para resumos, estudos e mais.
+- Transcrição de arquivos de áudio (`.mp3`, `.wav`, `.m4a`) com timestamps.
+- Remoção de `stopwords` e geração de versão "limpa" do texto.
+- Resumo didático via **Gemini API** da Google.
+- Conversão de Markdown para PDF com estilo tipo Notion.
+- Limpeza automática de arquivos temporários.
 
 ---
 
-## 📦 Requisitos
+## 🚀 Requisitos
 
-- Python 3.8+
-- [`torch`](https://pytorch.org/)
-- [`openai-whisper`](https://github.com/openai/whisper)
-- [`ntlk`](https://pypi.org/project/nltk/)
+### Dependências Python
 
-Instale com:
+Instale os seguintes pacotes via `pip`:
 
 ```bash
-pip install torch openai-whisper nltk
+pip install openai-whisper torch nltk weasyprint markdown
 ```
 
-Ou via `requirements.txt`:
+---
+
+### Dependências Externas
+
+#### 🔊 FFmpeg
+
+Whisper exige o FFmpeg instalado e configurado no PATH.
+
+- Site oficial: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
+- Para Windows: baixe o executável e adicione o caminho da pasta `bin` nas variáveis de ambiente do sistema.
+
+#### 🖼️ GTK3 para WeasyPrint
+
+WeasyPrint requer o ambiente GTK no Windows.
+
+- Baixe e instale a runtime GTK3:
+  - [https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer)
+- Após a instalação, adicione o diretório `bin` da GTK ao seu PATH.
+
+#### ⚡ CUDA (Opcional)
+
+Caso possua uma GPU NVIDIA, você pode configurar o CUDA para usar o Whisper de forma acelerada:
+
+1. Instale os drivers CUDA + cuDNN compatíveis com sua versão do PyTorch.
+2. Verifique se o dispositivo CUDA está disponível com:
+
+```python
+import torch
+print(torch.cuda.is_available())
+```
+
+---
+
+## 🔑 Obtenção da Chave da API Gemini
+
+Para gerar os resumos, você precisará de uma chave de API do Gemini.
+
+### Passos:
+
+1. Acesse o link: [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+2. Clique em "Criar chave de API".
+3. Copie a chave gerada.
+4. Crie um arquivo chamado `gemini.key` (sem aspas) na **pasta raiz do projeto**.
+5. Cole a chave dentro deste arquivo, sem espaços extras ou quebras de linha.
+
+> **Importante**: Não compartilhe sua chave com outras pessoas. Ela permite o uso da sua cota de requisições da API.
+
+---
+
+## 📁 Estrutura
+
+```
+📂 seu_projeto/
+│
+├── 📜 script.py
+├── 🔑 gemini.key        # Coloque sua chave da API Gemini aqui
+├── 📂 aulas_processadas/
+│   └── 📂 nome_do_audio/
+│       ├── resumo.pdf
+│       └── (arquivos temporários removidos ao final)
+```
+
+---
+
+## 🧠 Como Usar
+
+1. Coloque os áudios `.mp3`, `.wav` ou `.m4a` na mesma pasta do script.
+2. Certifique-se de que o arquivo `gemini.key` contém **apenas** sua chave da API Gemini.
+3. Execute o script:
 
 ```bash
-pip install -r requirements.txt
+python script.py
 ```
 
----
-
-## 🧠 Como usar
-
-### 🎯 Modo rápido (com opções padrão)
-
-```bash
-python transcrever.py "caminho/para/audio.mp3"
-```
-
-Isso irá:
-- Usar o modelo `base`
-- Rodar em `cpu`
-- Exportar `.txt` com e sem timestamps
+4. Escolha o áudio desejado (se houver mais de um).
+5. O script irá:
+   - Transcrever o áudio com timestamps
+   - Gerar uma versão limpa (sem timestamps e sem stopwords)
+   - Enviar a transcrição para a API Gemini
+   - Gerar um resumo em Markdown
+   - Exportar o resumo como PDF estilizado
+   - Limpar os arquivos temporários
 
 ---
 
-### ⚙️ Modo avançado com flags
+## 📝 Exemplo de Prompt Enviado ao Gemini
 
-```bash
-python transcrever.py "meuaudio.mp3" --modelo medium --sem-tempos
-```
-
-**Opções disponíveis:**
-
-| Flag              | Descrição                                                  | Valor padrão |
-|-------------------|------------------------------------------------------------|--------------|
-| `--modelo`        | Modelo Whisper a ser usado: `tiny`, `base`, `small`, etc.  | `base`       |
-| `--sem-tempos`    | Gera apenas a transcrição sem timestamps                   | *False*      |
+> "Sem fornecer nenhum tipo de feedback, comentário ou explicação adicional, gere um resumo completo e didático da transcrição da aula que vou enviar a seguir. O objetivo é facilitar a compreensão de um aluno de medicina, então complemente com informações relevantes sempre que considerar útil para a assimilação do conteúdo.
+>
+> O resumo deve ser entregue em Markdown puro, como se fosse um código-fonte, com títulos estilizados com emojis, no estilo visual do Notion.
+>
+> Apenas retorne o conteúdo em Markdown, sem nenhuma outra resposta textual. Texto da transcrição: (transcrição)"
 
 ---
 
-## 🧪 Exemplos práticos
+## ⚠️ Observações
 
-### 1. Transcrição simples com modelo pequeno:
-
-```bash
-python transcrever.py "aula_bioquimica.mp3" --modelo small
-```
-
-### 2. Transcrição só sem timestamps (ideal pra GPT):
-
-```bash
-python transcrever.py "palestra_neuro.m4a" --sem-tempos
-```
+- A API Gemini pode retornar trechos com blocos de código Markdown encapsulados. O script remove essas marcações automaticamente.
+- A performance da transcrição pode variar conforme o modelo Whisper escolhido (`base`, `small`, `medium`, etc.).
+- O script detecta automaticamente se você pode usar `cuda` (GPU) ou `cpu`.
 
 ---
 
-## 📁 Saída
+## 📌 Requisitos de Sistema
 
-São gerados dois arquivos `.txt` na raiz do projeto:
-
-- `com_tempos_nomeDoArquivo_DATA.txt`
-- `sem_tempos_nomeDoArquivo_DATA.txt`
-
-Exemplo de transcrição com timestamps:
-
-```txt
-[00:00 - 00:05] O paciente apresentava febre alta e calafrios.
-
-[00:06 - 00:12] Durante o exame físico, notou-se hepatomegalia.
-```
-
-Exemplo sem timestamps:
-
-```txt
-O paciente apresentava febre alta e calafrios.
-
-Durante o exame físico, notou-se hepatomegalia.
-```
+- Python 3.8 ou superior
+- Sistema operacional Windows (testado)
+- Memória recomendada: 8GB+
+- Internet ativa (para chamadas à API Gemini)
 
 ---
 
-## 🧠 Dica para uso com ChatGPT
+## 🧼 Limpeza
 
-Se você quiser pedir resumos, flashcards ou gerar questões a partir da transcrição, use a versão **sem timestamps** para otimizar espaço e compreensão do conteúdo.
-
----
-
-## 🧪 Modelos Whisper disponíveis
-
-| Modelo   | Tamanho | Qualidade | Performance |
-|----------|---------|-----------|-------------|
-| `tiny`   | Leve    | Baixa     | Muito rápido |
-| `base`   | Médio   | OK        | Rápido       |
-| `small`  | Bom     | Boa       | Ok           |
-| `medium` | Grande  | Muito boa | Mais lento   |
-| `large`  | Enorme  | Excelente | Lento (sem GPU) |
+Após a execução, todos os arquivos de áudio, transcrição e Markdown são automaticamente removidos da pasta `aulas_processadas`.
 
 ---
 
-## 📃 Licença
+## 💡 To Do
 
-MIT License
+- Incluir a geração de flashcards anki pelo gemini
 
 ---
 
-Feito com ☕ e 🧠 por **Niedson Emanoel**, para me ajudar nas aulas de medicina — e agora pode ajudar você também!
+## 📜 Licença
+
+Este projeto é de uso pessoal/educacional. Verifique os termos de uso das APIs utilizadas (Whisper, Gemini, WeasyPrint) antes de distribuir.
+
+---
+
+## 👨‍💻 Autor
+
+Feito com ☕ e 🧠 por \*\*Niedson Emanoel\*\*, para me ajudar nas aulas de medicina — e agora pode ajudar você também!
