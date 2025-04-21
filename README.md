@@ -94,9 +94,30 @@ Para gerar os resumos, você precisará de uma chave de API do Gemini.
 2. Certifique-se de que o arquivo `gemini.key` contém **apenas** sua chave da API Gemini.
 3. Execute o script:
 
+### 🎯 Modo rápido (com opções padrão e apenas um áudio na pasta raíz)
+
 ```bash
-python script.py
+python transcrever.py 
 ```
+
+Isso irá:
+- Usar o modelo `base`
+- Exportar `.txt` com e sem timestamps
+
+---
+
+### ⚙️ Modo avançado com flags
+
+```bash
+python transcrever.py --audio meuaudio.mp3 --modelo medium 
+```
+
+**Opções disponíveis:**
+
+| Flag              | Descrição                                                  | Valor padrão |
+|-------------------|------------------------------------------------------------|--------------|
+| `--modelo`        | Modelo Whisper a ser usado: `tiny`, `base`, `small`, etc.  | `base`       |
+| `--audio`        | Nome do arquivo de áudio a ser utilizado.  | `none`       |
 
 4. Escolha o áudio desejado (se houver mais de um).
 5. O script irá:
@@ -106,6 +127,18 @@ python script.py
    - Gerar um resumo em Markdown
    - Exportar o resumo como PDF estilizado
    - Limpar os arquivos temporários
+
+---
+
+## 🧪 Modelos Whisper disponíveis
+
+| Modelo   | Tamanho | Qualidade | Performance |
+|----------|---------|-----------|-------------|
+| `tiny`   | Leve    | Baixa     | Muito rápido |
+| `base`   | Médio   | OK        | Rápido       |
+| `small`  | Bom     | Boa       | Ok           |
+| `medium` | Grande  | Muito boa | Um pouco lento   |
+| `large`  | Enorme  | Excelente | Lento  |
 
 ---
 
@@ -156,4 +189,4 @@ Este projeto é de uso pessoal/educacional. Verifique os termos de uso das APIs 
 
 ## 👨‍💻 Autor
 
-Feito com ☕ e 🧠 por \*\*Niedson Emanoel\*\*, para me ajudar nas aulas de medicina — e agora pode ajudar você também!
+Feito com ☕ e 🧠 por Niedson Emanoel, para me ajudar nas aulas de medicina — e agora pode ajudar você também!
