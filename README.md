@@ -130,8 +130,6 @@ python transcrever.py --arquivo "meuaudio.mp3" --modelo medium
 
 ---
 
----
-
 ## 🧪 Modelos Whisper disponíveis
 
 | Modelo   | Tamanho | Qualidade | Performance |
