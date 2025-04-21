@@ -1,28 +1,35 @@
 # 🎧 Audio to Resume
 
-Transcreva áudios automaticamente com parágrafos organizados e timestamps usando o modelo Whisper.
+Transcreva áudios automaticamente com organização em parágrafos e exportação com ou sem timestamps — usando o poderoso modelo Whisper da OpenAI.
+
+Ideal para gerar **resumos**, **flashcards**, **perguntas**, ou **legendas sincronizadas** com base em áudios de aulas, entrevistas ou qualquer outro conteúdo falado.
 
 ---
 
 ## 🚀 Funcionalidades
 
-- Transcrição automática de arquivos `.mp3`, `.wav`, `.m4a`, etc.  
-- Divisão inteligente em parágrafos com timestamps.  
-- Exportação em `.txt` para facilitar leitura e estudos.
+- ✅ Transcrição automática de arquivos `.mp3`, `.wav`, `.m4a`, etc.
+- ✅ Divisão inteligente em parágrafos.
+- ✅ Exportação em `.txt` com e sem timestamps.
+- ✅ Escolha do modelo Whisper (de `tiny` a `large`) via terminal.
+- ✅ Suporte a CUDA (GPU) ou CPU, configurável via argumento.
+- ✅ Pronto para integração com GPT para resumos, estudos e mais.
 
 ---
 
 ## 📦 Requisitos
 
 - Python 3.8+
-- `torch`
-- `openai-whisper`
+- [`torch`](https://pytorch.org/)
+- [`openai-whisper`](https://github.com/openai/whisper)
 
----
+Instale com:
 
-## 🔧 Instalação
+```bash
+pip install torch openai-whisper
+```
 
-Clone o repositório e instale as dependências com:
+Ou via `requirements.txt`:
 
 ```bash
 pip install -r requirements.txt
@@ -32,28 +39,65 @@ pip install -r requirements.txt
 
 ## 🧠 Como usar
 
-1. Coloque seu arquivo de áudio na raiz do projeto ou na pasta `examples/`.
-
-2. Execute o script:
+### 🎯 Modo rápido (com opções padrão)
 
 ```bash
-python transcriber.py
+python transcrever.py "caminho/para/audio.mp3"
 ```
 
-3. No código, você pode ajustar:
+Isso irá:
+- Usar o modelo `base`
+- Rodar em `cpu`
+- Exportar `.txt` com e sem timestamps
 
-```python
-caminho = "examples/seuarquivo.mp3"
-modelo = "small"  # Opções: tiny, base, small, medium, large
+---
+
+### ⚙️ Modo avançado com flags
+
+```bash
+python transcrever.py "meuaudio.mp3" --modelo medium --dispositivo cuda --sem-tempos
+```
+
+**Opções disponíveis:**
+
+| Flag              | Descrição                                                  | Valor padrão |
+|-------------------|------------------------------------------------------------|--------------|
+| `--modelo`        | Modelo Whisper a ser usado: `tiny`, `base`, `small`, etc.  | `base`       |
+| `--dispositivo`   | `cpu` ou `cuda` (GPU)                                       | `cpu`        |
+| `--sem-tempos`    | Gera apenas a transcrição sem timestamps                   | *False*      |
+
+---
+
+## 🧪 Exemplos práticos
+
+### 1. Transcrição simples com modelo pequeno:
+
+```bash
+python transcrever.py "aula_bioquimica.mp3" --modelo small
+```
+
+### 2. Transcrição só sem timestamps (ideal pra GPT):
+
+```bash
+python transcrever.py "palestra_neuro.m4a" --sem-tempos
+```
+
+### 3. Usando GPU e modelo mais robusto:
+
+```bash
+python transcrever.py "conferencia.wav" --modelo large --dispositivo cuda
 ```
 
 ---
 
 ## 📁 Saída
 
-O arquivo `.txt` com a transcrição será salvo automaticamente com nome baseado no áudio original e data/hora da transcrição.
+São gerados dois arquivos `.txt` na raiz do projeto:
 
-### 📌 Exemplo de saída:
+- `com_tempos_nomeDoArquivo_DATA.txt`
+- `sem_tempos_nomeDoArquivo_DATA.txt`
+
+Exemplo de transcrição com timestamps:
 
 ```txt
 [00:00 - 00:05] O paciente apresentava febre alta e calafrios.
@@ -61,17 +105,31 @@ O arquivo `.txt` com a transcrição será salvo automaticamente com nome basead
 [00:06 - 00:12] Durante o exame físico, notou-se hepatomegalia.
 ```
 
+Exemplo sem timestamps:
+
+```txt
+O paciente apresentava febre alta e calafrios.
+
+Durante o exame físico, notou-se hepatomegalia.
+```
+
 ---
 
-## 🧪 Modelos disponíveis
+## 🧠 Dica para uso com ChatGPT
 
-Você pode escolher entre os seguintes modelos Whisper (quanto maior, mais preciso e mais pesado):
+Se você quiser pedir resumos, flashcards ou gerar questões a partir da transcrição, use a versão **sem timestamps** para otimizar espaço e compreensão do conteúdo.
 
-- `tiny`
-- `base`
-- `small`
-- `medium`
-- `large`
+---
+
+## 🧪 Modelos Whisper disponíveis
+
+| Modelo   | Tamanho | Qualidade | Performance |
+|----------|---------|-----------|-------------|
+| `tiny`   | Leve    | Baixa     | Muito rápido |
+| `base`   | Médio   | OK        | Rápido       |
+| `small`  | Bom     | Boa       | Ok           |
+| `medium` | Grande  | Muito boa | Mais lento   |
+| `large`  | Enorme  | Excelente | Lento (sem GPU) |
 
 ---
 
@@ -81,4 +139,4 @@ MIT License
 
 ---
 
-Feito com ☕ e 🧠 por Niedson Emanoel, para me ajudar nas aulas de medicina.
+Feito com ☕ e 🧠 por **Niedson Emanoel**, para me ajudar nas aulas de medicina — e agora pode ajudar você também!

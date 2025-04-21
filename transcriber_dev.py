@@ -57,18 +57,29 @@ def parse_args():
     parser.add_argument("--sem-tempos", action="store_true", help="Exportar apenas transcrição sem timestamps")
     return parser.parse_args()
 
-
+# 🧪 Execução direta
 if __name__ == "__main__":
-    args = parse_args()
+    caminho = r"C:\Users\nieds\OneDrive\Documents\GitHub\audioToResume\aulalindon.mp3"
+    modelo = "medium"
+    dispositivo = "cuda"  # ou "cpu"
 
     try:
-        texto = transcrever_audio(
-            caminho_audio=args.arquivo,
-            modelo=args.modelo,
-            dispositivo=args.dispositivo,
-            incluir_tempos=not args.sem_tempos
-        )
-        print("\n📝 Transcrição (parcial):")
-        print(texto[:1000])  # imprime os primeiros 1000 caracteres
+        transcrever_audio(caminho, modelo=modelo, exportar=True, dispositivo=dispositivo)
     except Exception as erro:
         print(f"❌ Erro: {erro}")
+
+# 🚀 Execução via terminal
+#if __name__ == "__main__":
+#    args = parse_args()
+
+#    try:
+#        texto = transcrever_audio(
+#            caminho_audio=args.arquivo,
+#            modelo=args.modelo,
+#            dispositivo=args.dispositivo,
+#            incluir_tempos=not args.sem_tempos
+#        )
+#        print("\n📝 Transcrição (parcial):")
+#        print(texto[:1000])  # imprime os primeiros 1000 caracteres
+#    except Exception as erro:
+#        print(f"❌ Erro: {erro}")
