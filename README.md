@@ -12,7 +12,7 @@ Ideal para gerar **resumos**, **flashcards**, **perguntas**, ou **legendas sincr
 - ✅ Divisão inteligente em parágrafos.
 - ✅ Exportação em `.txt` com e sem timestamps.
 - ✅ Escolha do modelo Whisper (de `tiny` a `large`) via terminal.
-- ✅ Suporte a CUDA (GPU) ou CPU, configurável via argumento.
+- ✅ Suporte a CUDA (GPU) ou CPU, escolhido automaticamente.
 - ✅ Pronto para integração com GPT para resumos, estudos e mais.
 
 ---
@@ -55,7 +55,7 @@ Isso irá:
 ### ⚙️ Modo avançado com flags
 
 ```bash
-python transcrever.py "meuaudio.mp3" --modelo medium --dispositivo cuda --sem-tempos
+python transcrever.py "meuaudio.mp3" --modelo medium --sem-tempos
 ```
 
 **Opções disponíveis:**
@@ -63,7 +63,6 @@ python transcrever.py "meuaudio.mp3" --modelo medium --dispositivo cuda --sem-te
 | Flag              | Descrição                                                  | Valor padrão |
 |-------------------|------------------------------------------------------------|--------------|
 | `--modelo`        | Modelo Whisper a ser usado: `tiny`, `base`, `small`, etc.  | `base`       |
-| `--dispositivo`   | `cpu` ou `cuda` (GPU)                                       | `cpu`        |
 | `--sem-tempos`    | Gera apenas a transcrição sem timestamps                   | *False*      |
 
 ---
@@ -80,12 +79,6 @@ python transcrever.py "aula_bioquimica.mp3" --modelo small
 
 ```bash
 python transcrever.py "palestra_neuro.m4a" --sem-tempos
-```
-
-### 3. Usando GPU e modelo mais robusto:
-
-```bash
-python transcrever.py "conferencia.wav" --modelo large --dispositivo cuda
 ```
 
 ---
