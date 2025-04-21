@@ -109,7 +109,7 @@ Isso irá:
 ### ⚙️ Modo avançado com flags
 
 ```bash
-python transcrever.py --arquivo "meuaudio.mp3" --modelo medium 
+python transcrever.py --audio meuaudio.mp3 --modelo medium 
 ```
 
 **Opções disponíveis:**
@@ -117,7 +117,7 @@ python transcrever.py --arquivo "meuaudio.mp3" --modelo medium
 | Flag              | Descrição                                                  | Valor padrão |
 |-------------------|------------------------------------------------------------|--------------|
 | `--modelo`        | Modelo Whisper a ser usado: `tiny`, `base`, `small`, etc.  | `base`       |
-| `--arquivo`        | Nome do arquivo de áudio a ser utilizado.  | `none`       |
+| `--audio`        | Nome do arquivo de áudio a ser utilizado.  | `none`       |
 
 4. Escolha o áudio desejado (se houver mais de um).
 5. O script irá:
