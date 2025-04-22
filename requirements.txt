@@ -3,3 +3,4 @@ torch
 nltk
 weasyprint
 markdown
+pandas
