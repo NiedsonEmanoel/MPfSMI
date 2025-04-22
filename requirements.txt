@@ -3,9 +3,3 @@ torch
 nltk
 weasyprint
 markdown
-
-#gtk3
-#https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer
-
-#ffmpeg
-#CUDA

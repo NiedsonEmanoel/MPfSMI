@@ -1,3 +1,6 @@
+#MPfSMl - Medical pratice for Students on Machine learn 
+#Niedson Emanoel, 21/04/2025.
+
 import whisper
 import argparse
 import os
@@ -11,6 +14,8 @@ import requests
 import markdown
 from weasyprint import HTML
 import shutil
+import pypandoc
+
 
 # Lê a chave da API do arquivo gemini.key
 with open("gemini.key", "r") as file:
@@ -21,52 +26,60 @@ URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash
 notion_style = """
 <style>
   body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Segoe UI Emoji", "Apple Color Emoji";
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       max-width: 800px;
-      margin: 10px auto; 
-      padding: 10px;  
+      margin: 40px auto;
+      padding: 20px;
       line-height: 1.6;
       font-size: 16px;
-      color: #2e2e2e;
-      background: #ffffff;
+      color: #333;
+      background: #fff;
   }
-    h1, h2, h3 {
-        border-bottom: 1px solid #eaeaea;
-        padding-bottom: 0.3em;
-        margin-top: 1.4em;
-    }
-    code {
-        background-color: #f6f8fa;
-        padding: 2px 4px;
-        border-radius: 3px;
-        font-size: 90%;
-        font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-    }
-    pre code {
-        background-color: #f6f8fa;
-        display: block;
-        padding: 1em;
-        overflow-x: auto;
-    }
-    blockquote {
-        border-left: 4px solid #dfe2e5;
-        padding: 0 1em;
-        color: #6a737d;
-    }
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-    th, td {
-        border: 1px solid #dfe2e5;
-        padding: 6px 13px;
-    }
-    th {
-        background-color: #f6f8fa;
-    }
-    @page {
-        margin: 10mm;  
-    }
+
+  h1, h2, h3 {
+      border-bottom: 1px solid #eaeaea;
+      padding-bottom: 0.3em;
+      margin-top: 1.4em;
+  }
+
+  code {
+      background-color: #f6f8fa;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-size: 90%;
+      font-family: 'Courier New', Courier, monospace;
+  }
+
+  pre code {
+      background-color: #f6f8fa;
+      display: block;
+      padding: 1em;
+      overflow-x: auto;
+  }
+
+  blockquote {
+      border-left: 4px solid #dfe2e5;
+      padding: 0 1em;
+      color: #6a737d;
+  }
+
+  table {
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  th, td {
+      border: 1px solid #dfe2e5;
+      padding: 6px 13px;
+  }
+
+  th {
+      background-color: #f6f8fa;
+  }
+
+  @page {
+      margin: 20mm;
+  }
 </style>
 """
 
@@ -82,13 +95,86 @@ def argumentos_cli():
 
     return parser.parse_args()
 
-def gerar_pdf_markdown(markdown_text, pasta_destino):
-    nome_pdf = "resumo.pdf"
-    html_content = markdown.markdown(markdown_text, extensions=["extra", "tables", "fenced_code"])
+def gerar_pdf_markdown(markdown_text, pasta_destino, nome_pdf):
+    html_content = pypandoc.convert_text(markdown_text, 'html', format='md')
     full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{notion_style}</head><body>{html_content}</body></html>"
     caminho_pdf = os.path.join(pasta_destino, nome_pdf)
     HTML(string=full_html).write_pdf(caminho_pdf)
     print(f"✅ PDF gerado com sucesso: {caminho_pdf}")
+    
+def gerar_guia_estudos_markdown(transcricao: str) -> tuple[str, str]:
+    prompt_estudo = f"""
+A partir do conteúdo abaixo (resumo), crie uma guia de estudos personalizada em formato Markdown, com foco em aprendizado acadêmico e médico.
+
+A resposta será convertida em PDF, então:
+
+- Use formatação Markdown limpa
+- Use títulos, listas e divisões visuais claras
+- Não inclua elementos interativos ou links clicáveis
+
+Contexto essencial:
+
+Este resumo foi gerado a partir de um sistema automatizado que converte áudios de estudo em texto. A partir dele, serão produzidos:
+
+- Questões objetivas e clínicas, classificadas por dificuldade
+- Flashcards com os principais pontos e termos
+
+Por isso, a guia de estudos deve:
+
+- Indicar os conhecimentos prévios essenciais para compreender o tema
+- Apresentar um checklist organizado com o que estudar primeiro
+- Explicar como e quando utilizar as questões e flashcards gerados
+- Evitar sugestões genéricas como "ensinar a alguém" ou "fazer resumos próprios"
+
+A estrutura da resposta deve ser:
+
+# Guia de Estudos: [Tema do Resumo]
+
+## Visão Geral
+Descreva em poucas linhas o tema central e sua relevância médica.
+
+## Pré-requisitos
+Liste tópicos que o estudante deve dominar antes de aprofundar o conteúdo. Ex: anatomia relacionada, princípios básicos, etc.
+
+## Checklist de Estudo
+Organize os principais pontos do conteúdo em forma de lista ordenada. Cada item deve representar uma etapa de estudo.
+
+## Aplicação Direta
+Oriente o estudante a:
+
+- Usar as questões geradas para treinar sua compreensão e identificar lacunas
+- Utilizar os flashcards para revisão contínua e memorização
+- Revisar frequentemente os erros nas questões para reforçar áreas frágeis
+
+Não inclua sugestões genéricas como ensinar o conteúdo para outra pessoa.
+
+## Plano de Estudo Sugerido
+Organize um cronograma de revisão dividido por dias (ex: 3, 7 ou 14 dias), integrando o uso das questões e dos flashcards gerados com o resumo.
+
+Resumo para base do estudo:
+{transcricao}
+"""
+
+    with open("gemini.key", "r") as file:
+        API_KEY = file.read().strip()
+
+    URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={API_KEY}"
+    headers = {"Content-Type": "application/json"}
+
+    data = {"contents": [{"parts": [{"text": prompt_estudo}]}]}
+
+    response = requests.post(URL, headers=headers, json=data)
+
+    if response.status_code == 200:
+        result = response.json()
+        markdown_raw = result['candidates'][0]['content']['parts'][0]['text']
+        
+        markdown_clean = markdown_raw.strip().split("\n", 1)[-1].strip()  # Clean and trim the result
+        
+        titulo = next((line.strip("# ").strip() for line in markdown_clean.split("\n") if line.startswith("# ")), "Guia")
+        return f"{titulo}.pdf", markdown_clean
+    else:
+        raise Exception(f"Erro na requisição: {response.status_code}\n{response.text}")
 
 def gerar_resumo_markdown(transcricao: str) -> tuple[str, str]:
     prompt = f"""
@@ -226,15 +312,103 @@ def escolher_arquivo_audio(diretorio):
     escolha = int(input(f"Escolha um número (1-{len(arquivos_audio)}): ")) - 1
     return arquivos_audio[escolha]
 
+def gerar_questoes_markdown(texto_base):
+    prompt = f"""
+    A partir do conteúdo abaixo, crie 10 questões de cada nível de dificuldade (fácil, médio, difícil), com foco em reforço de compreensão médica e acadêmica. Siga as regras:
+
+    - Crie 10 questões fáceis, 10 médias e 10 difíceis.
+    - Não agrupe as questões em fáceis, médias ou dificeis, o aluno só deve saber ao ver o gabarito.
+    - Faça da questão 01 até a 30, sem agrupar por dificuldade.
+    - As questões devem ser formuladas em formatos variados:
+      - Questões objetivas (com alternativas)
+      - Questões de resposta curta
+      - Questões de verdadeiro ou falso
+      - Casos clínicos
+
+    - As alternativas, ou as respostas curtas, devem ser realistas e educativas, com a resposta correta claramente identificada.
+    - As alternativas devem ser equilibradas em dificuldade, sem nenhuma óbvia ou excessivamente fácil.
+    - Cada questão deve ser seguida de justificativa detalhada explicando o raciocínio por trás da resposta correta.
+    - Não forneça explicações adicionais além das instruções acima.
+
+    A saída deve estar no formato Markdown, com as questões bem organizadas e agradáveis para visualização e impressão. Evite usar links e mantenha a formatação simples, para que as questões sejam facilmente legíveis e prontas para serem impressas. As alternativas devem ser listadas de forma clara, e cada justificativa deve vir logo após a questão correspondente.
+
+    Para as questões de resposta curta, inclua um espaço de linhas (sublinhado) do tamanho necessário para a resposta, usando a seguinte formatação:
+    ________________________
+
+    Saída: Responda no formato Markdown com as seguintes informações:
+
+    ### Questões:
+    
+    1.  **Pergunta:** (enunciado da questão)  
+       - Alternativas:
+         - A) Alternativa 1
+         - B) Alternativa 2
+         - C) Alternativa 3
+         - D) Alternativa 4
+         - E) Alternativa 5
+
+    2.  **Pergunta:** (enunciado da questão)  
+       - Alternativas:
+         - A) Verdadeiro
+         - B) Falso (justificar aqui:______________________________)
+
+    3. **Pergunta:** (enunciado da questão)  
+       **Resposta:**  
+       _____________________________________________________________  
+
+    Repita as 30 questões, seguindo o mesmo formato
+
+    ### Gabarito:
+    1. **Resposta:** A  
+       **Justificativa:** Explicação detalhada do porquê a alternativa A é a correta.
+       **Nível: fácil/médio/difícil**  
+
+    2. **Resposta:** B  
+       **Justificativa:** Explicação detalhada do porquê a alternativa B é a correta.
+       **Nível: fácil/médio/difícil**  
+
+    3. **Resposta:** Falso  
+       **Justificativa:** Explicação detalhada do que tornou a questão falsa ou verdadeira.
+       **Nível: fácil/médio/difícil**  
+
+    (Repita para todas as questões)
+
+    ### Texto base:
+    {texto_base}
+    """
+        # Lê a chave da API do arquivo gemini.key
+    with open("gemini.key", "r") as file:
+        API_KEY = file.read().strip()
+
+    URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={API_KEY}"
+    headers = {"Content-Type": "application/json"}
+
+    data = {"contents": [{"parts": [{"text": prompt}]}]}
+
+    response = requests.post(URL, headers=headers, json=data)
+
+    if response.status_code == 200:
+        result = response.json()
+        markdown_raw = result['candidates'][0]['content']['parts'][0]['text']
+        
+        markdown_clean = markdown_raw.strip().split("\n", 1)[-1].strip()  # Clean and trim the result
+        
+        titulo = 'questoes'
+        return f"{titulo}.pdf", markdown_clean
+    else:
+        raise Exception(f"Erro na requisição: {response.status_code}\n{response.text}")
+
 # 🧪 Execução direta
 if __name__ == "__main__":
-    args = argumentos_cli()
+    #args = argumentos_cli()
     diretorio = "."  
-    arquivo_audio = args.audio if args.audio else escolher_arquivo_audio(diretorio)
+    #arquivo_audio = args.audio if args.audio else escolher_arquivo_audio(diretorio)
+    arquivo_audio = escolher_arquivo_audio(diretorio)
 
     if arquivo_audio:
         caminho_audio = os.path.join(diretorio, arquivo_audio)
-        modelo = args.modelo
+        #modelo = args.modelo
+        modelo = 'medium'
         dispositivo = escolher_dispositivo()
 
         # Usa o nome do arquivo de áudio (sem extensão) para criar a pasta
@@ -247,8 +421,22 @@ if __name__ == "__main__":
             os.makedirs(pasta_destino)
             try:
                 withTime, noTime = transcrever_audio(caminho_audio, modelo=modelo, exportar=True, dispositivo=dispositivo)
+
+                print("\n📝 Criando resumo")
                 tituloMD, resumoMD = gerar_resumo_markdown(noTime)
-                gerar_pdf_markdown(resumoMD, pasta_destino)
+                print("\n✅ Resumo pronto!")
+
+                print("\n📝 Criando guia de estudos")
+                tituloGuia, guiaEstudos = gerar_guia_estudos_markdown(resumoMD)
+                print("\n✅ Guia de estudos pronto!")
+
+                print("\n📝 Criando questões")
+                tituloQuestoes, QuestoesMD = gerar_questoes_markdown(resumoMD)
+                print("\n✅ Questoes prontas!")
+
+                gerar_pdf_markdown(resumoMD, pasta_destino, "resumo.pdf")
+                gerar_pdf_markdown(guiaEstudos, pasta_destino, "guia.pdf")
+                gerar_pdf_markdown(QuestoesMD, pasta_destino, "questoes.pdf")
 
                 # Mover os arquivos usados para a pasta destino
                 mover_arquivos_processados(pasta_destino, nome_arquivo_sem_ext)
