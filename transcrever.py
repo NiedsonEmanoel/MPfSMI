@@ -14,8 +14,6 @@ import requests
 import markdown
 from weasyprint import HTML
 import shutil
-import pypandoc
-
 
 # Lê a chave da API do arquivo gemini.key
 with open("gemini.key", "r") as file:
@@ -25,62 +23,70 @@ URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash
 
 notion_style = """
 <style>
-  body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-      line-height: 1.6;
-      font-size: 16px;
-      color: #333;
-      background: #fff;
+  /* Reset básico */
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
   }
 
+  body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Segoe UI Emoji", "Apple Color Emoji";
+      max-width: 800px;
+      margin: 10px auto; 
+      padding: 10px;  
+      line-height: 1.6;
+      font-size: 16px;
+      color: #2e2e2e;
+      background: #ffffff;
+  }
+  
   h1, h2, h3 {
       border-bottom: 1px solid #eaeaea;
       padding-bottom: 0.3em;
       margin-top: 1.4em;
   }
-
+  
   code {
       background-color: #f6f8fa;
       padding: 2px 4px;
       border-radius: 3px;
       font-size: 90%;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
   }
-
+  
   pre code {
       background-color: #f6f8fa;
       display: block;
       padding: 1em;
       overflow-x: auto;
   }
-
+  
   blockquote {
       border-left: 4px solid #dfe2e5;
       padding: 0 1em;
       color: #6a737d;
   }
-
+  
   table {
       border-collapse: collapse;
       width: 100%;
   }
-
+  
   th, td {
       border: 1px solid #dfe2e5;
       padding: 6px 13px;
   }
-
+  
   th {
       background-color: #f6f8fa;
   }
 
   @page {
-      margin: 20mm;
+      margin: 10mm;  
   }
 </style>
+
 """
 
 headers = {
@@ -96,12 +102,12 @@ def argumentos_cli():
     return parser.parse_args()
 
 def gerar_pdf_markdown(markdown_text, pasta_destino, nome_pdf):
-    html_content = pypandoc.convert_text(markdown_text, 'html', format='md')
+    html_content = markdown.markdown(markdown_text, extensions=["extra", "tables", "fenced_code"])
     full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{notion_style}</head><body>{html_content}</body></html>"
     caminho_pdf = os.path.join(pasta_destino, nome_pdf)
     HTML(string=full_html).write_pdf(caminho_pdf)
     print(f"✅ PDF gerado com sucesso: {caminho_pdf}")
-    
+
 def gerar_guia_estudos_markdown(transcricao: str) -> tuple[str, str]:
     prompt_estudo = f"""
 A partir do conteúdo abaixo (resumo), crie uma guia de estudos personalizada em formato Markdown, com foco em aprendizado acadêmico e médico.
@@ -305,12 +311,9 @@ def escolher_arquivo_audio(diretorio):
     if len(arquivos_audio) == 1:
         return arquivos_audio[0]
 
-    print("🔊 Múltiplos arquivos de áudio encontrados. Escolha um para processar:")
-    for i, arquivo in enumerate(arquivos_audio, 1):
-        print(f"{i}. {arquivo}")
-    
-    escolha = int(input(f"Escolha um número (1-{len(arquivos_audio)}): ")) - 1
-    return arquivos_audio[escolha]
+    print("🔊 Múltiplos arquivos de áudio encontrados. Escolha um para processar via flag --audio.")
+    print('Ver documentação.')
+    return (2/0)/0
 
 def gerar_questoes_markdown(texto_base):
     prompt = f"""
