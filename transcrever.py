@@ -23,70 +23,62 @@ URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash
 
 notion_style = """
 <style>
-  /* Reset básico */
-  * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-  }
-
   body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Segoe UI Emoji", "Apple Color Emoji";
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       max-width: 800px;
-      margin: 10px auto; 
-      padding: 10px;  
+      margin: 40px auto;
+      padding: 20px;
       line-height: 1.6;
       font-size: 16px;
-      color: #2e2e2e;
-      background: #ffffff;
+      color: #333;
+      background: #fff;
   }
-  
+
   h1, h2, h3 {
       border-bottom: 1px solid #eaeaea;
       padding-bottom: 0.3em;
       margin-top: 1.4em;
   }
-  
+
   code {
       background-color: #f6f8fa;
       padding: 2px 4px;
       border-radius: 3px;
       font-size: 90%;
-      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+      font-family: 'Courier New', Courier, monospace;
   }
-  
+
   pre code {
       background-color: #f6f8fa;
       display: block;
       padding: 1em;
       overflow-x: auto;
   }
-  
+
   blockquote {
       border-left: 4px solid #dfe2e5;
       padding: 0 1em;
       color: #6a737d;
   }
-  
+
   table {
       border-collapse: collapse;
       width: 100%;
   }
-  
+
   th, td {
       border: 1px solid #dfe2e5;
       padding: 6px 13px;
   }
-  
+
   th {
       background-color: #f6f8fa;
   }
 
   @page {
-      margin: 10mm;  
+      margin: 20mm;
   }
 </style>
-
 """
 
 headers = {
