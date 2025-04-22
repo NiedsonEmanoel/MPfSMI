@@ -1,4 +1,4 @@
-# 🎧 Audio to Resume
+# 🎧 MPfSMl - Medical Practice for Students on Machine Learning 
 
 Este projeto permite transcrever áudios (como aulas, reuniões, entrevistas) usando o modelo [`whisper`](https://github.com/openai/whisper), gerar um resumo didático em Markdown com a API Gemini da Google, e exportar o conteúdo final como PDF estilizado no padrão visual do Notion.
 
