@@ -1,8 +1,22 @@
 import requests
 import json
 import pandas as pd
+import re
+import os
+import genanki
 
-def gerar_flashcards(texto_base):
+def gerar_flashcards(texto_base: str, titulo: str, pasta_destino):
+    """
+    Gera um deck de flashcards do Anki (.apkg) com base em um resumo médico.
+    
+    Parâmetros:
+    - texto_base: conteúdo que será transformado em flashcards.
+    - titulo: nome do deck e base para o nome do arquivo gerado.
+    
+    Saída:
+    - Cria um arquivo .apkg com os flashcards, salvo no diretório atual.
+    - Retorna o texto gerado com perguntas e respostas.
+    """
     prompt = f"""A seguir, fornecerei um resumo de conteúdo médico. Sua tarefa é transformá-lo em **flashcards de alta qualidade para Anki**, com base nos seguintes critérios:
 
 🎯 Objetivos:
@@ -20,7 +34,7 @@ def gerar_flashcards(texto_base):
 - "Quais os principais achados no ECG da hipercalemia?"
 
 ✅ Formato da resposta:
-Retorne a resposta **em formato padronizado**, como no exemplo abaixo:
+Retorne a resposta **em formato padronizado**, sem ser no formato JSON, me mande estruturado pergunta/resposta como no exemplo abaixo:
 
       "pergunta": "Qual estrutura do coração inicia o impulso elétrico?",
       "resposta": "O nó sinoatrial (SA), localizado no átrio direito."
@@ -28,6 +42,22 @@ Retorne a resposta **em formato padronizado**, como no exemplo abaixo:
 Segue o material do assunto que você usará como base e se sinta à vontade para complementar de forma que ajude no aprendizado médico:
 {texto_base}
 """
+
+    deck_id = abs(hash(titulo)) % (10**10)  # Gera um ID baseado no título
+    model_id = 'enemaster'  # Modelo fixo
+
+    my_deck = genanki.Deck(deck_id, titulo)
+
+    my_model = genanki.Model(
+        model_id,
+        'Modelo Padrão',
+        fields=[{'name': 'Pergunta'}, {'name': 'Resposta'}],
+        templates=[{
+            'name': 'Card 1',
+            'qfmt': '{{Pergunta}}',
+            'afmt': '{{Resposta}}',
+        }],
+    )
 
     # Lê a chave da API do arquivo gemini.key
     with open("gemini.key", "r") as file:
@@ -44,15 +74,25 @@ Segue o material do assunto que você usará como base e se sinta à vontade par
             result = response.json()
             output_text = result['candidates'][0]['content']['parts'][0]['text']
 
-            # Tenta extrair o JSON do texto retornado
-        
-            output_text = output_text.strip().split("\n", 1)[-1].strip()  # Clean and trim the result
-        
+            questions = re.findall(r'"pergunta": "(.*?)",\s*"resposta": "(.*?)"', output_text)
+            df = pd.DataFrame(questions, columns=["pergunta", "resposta"])
+
+            for _, row in df.iterrows():
+                my_deck.add_note(genanki.Note(
+                    model=my_model,
+                    fields=[row['pergunta'], row['resposta']]
+                ))
+
+            nome_arquivo = f"{titulo.lower().replace(' ', '_')}.apkg"
+            caminho = os.path.join(pasta_destino, nome_arquivo)
+            my_deck.write_to_file(caminho)
+
+            print(f"Deck '{titulo}' salvo como {caminho}.")
             return output_text
 
         except (KeyError, json.JSONDecodeError) as e:
             print("Erro ao processar a resposta:")
-            print(output_text)  # Ajuda no debug
+            print(response.text)
             raise e
     else:
         raise Exception(f"Erro na requisição: {response.status_code}\n{response.text}")
@@ -99,5 +139,4 @@ resumo_fisiologia_digestoria = """
 - **Fase intestinal**: controle da entrada do quimo no duodeno e secreção intestinal.
 """
 
-# Gerando os flashcards
-flashcards = (gerar_flashcards(resumo_fisiologia_digestoria))
+gerar_flashcards(texto_base=resumo_fisiologia_digestoria, titulo='fisio', pasta_destino='')

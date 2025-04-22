@@ -4,7 +4,6 @@
 import whisper
 import argparse
 import os
-import hashlib
 from datetime import datetime
 import torch
 import nltk
@@ -14,6 +13,7 @@ import requests
 import markdown
 from weasyprint import HTML
 import shutil
+
 
 # Lê a chave da API do arquivo gemini.key
 with open("gemini.key", "r") as file:
