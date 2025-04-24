@@ -314,6 +314,7 @@ def gerar_questoes_markdown(texto_base):
     - Crie 10 questões fáceis, 10 médias e 10 difíceis.
     - Não agrupe as questões em fáceis, médias ou dificeis, o aluno só deve saber ao ver o gabarito.
     - Faça da questão 01 até a 30, sem agrupar por dificuldade.
+    - As respostas das questões devem estar APENAS excluivamente na área de gabaritos.
     - As questões devem ser formuladas em formatos variados:
       - Questões objetivas (com alternativas)
       - Questões de resposta curta
