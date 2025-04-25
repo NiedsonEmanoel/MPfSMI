@@ -38,6 +38,36 @@ Nesta playlist, você encontrará:
 - Dicas para otimizar o desempenho
 
 ---
+---
+
+## 🃏 Flashcards para Anki (via Gemini + genanki)
+
+O **MPfSMl** também é capaz de gerar **flashcards automáticos** com base no conteúdo do resumo da aula.
+
+### 🔧 Como funciona:
+
+- O resumo é enviado para a **API Gemini** com um prompt específico para geração de perguntas e respostas objetivas.
+- O retorno vem em formato **JSON**, contendo uma lista com dezenas de pares **Pergunta/Resposta**.
+- Esses pares são automaticamente convertidos para um baralho do **Anki** (`.apkg`) usando a biblioteca [`genanki`](https://github.com/kerrickstaley/genanki).
+- O baralho é salvo na pasta de saída da aula, com nome correspondente ao áudio original.
+
+### 💡 Exemplo de flashcard gerado:
+
+| Frente (Pergunta)                                           | Verso (Resposta)                                                                 |
+|-------------------------------------------------------------|----------------------------------------------------------------------------------|
+| Qual é o principal mediador da resposta inflamatória aguda? | A histamina é um dos principais mediadores da resposta inflamatória aguda.      |
+
+### 🧠 Como usar no Anki:
+
+1. Após o processamento da aula, localize o arquivo `.apkg` em:  
+   `aulas_processadas/nome_do_audio/`
+2. Abra o **Anki** e vá em `Arquivo > Importar`.
+3. Selecione o arquivo `.apkg` correspondente.
+4. Pronto! Os cards estarão organizados em um baralho com o nome da aula.
+
+> 💡 **Dica:** Os flashcards seguem uma estrutura voltada para **memorização ativa** — ótimos para revisão de conteúdos médicos antes de provas ou plantões.
+
+---
 ## 🚀 Requisitos
 
 ### Dependências Python
@@ -196,12 +226,6 @@ python transcrever.py --audio meuaudio.mp3 --modelo medium
 ## 🧼 Limpeza
 
 Após a execução, todos os arquivos de áudio, transcrição e Markdown são automaticamente movidos para a pasta `aulas_processadas`.
-
----
-
-## 💡 To Do
-
-- Incluir a geração de flashcards anki pelo gemini
 
 ---
 
