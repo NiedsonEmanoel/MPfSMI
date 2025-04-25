@@ -420,12 +420,17 @@ def gerarFlashcards(resumo):
     - Utilizar a estrutura "pergunta e resposta" de forma clara e objetiva
     - Evitar usar questões muito genéricas ou vagas
 
-    Responda apenas com o JSON. Não adicione explicações extras.
+    A resposta deve conter APENAS uma lista JSON, sem nenhuma explicação fora do JSON.
 
-    A estrutura da resposta deve ser:
+    Cada item deve ter esta estrutura:
 
-    **Pergunta:** [Texto da pergunta]
-    **Resposta:** [Texto da resposta]
+    [
+        {{
+        "Pergunta": "Qual é o principal mediador da resposta inflamatória aguda?",
+        "Resposta": "A histamina é um dos principais mediadores da resposta inflamatória aguda."
+        }},
+        ...
+    ]
 
     Resumo para base dos flashcards:
         {resumo}
@@ -500,35 +505,35 @@ if __name__ == "__main__":
         pasta_destino = os.path.join("aulas_processadas", nome_arquivo_sem_ext)
 
         if os.path.exists(pasta_destino):
-            print(f"⚠️ Esta aula já foi processada anteriormente: {pasta_destino}")
+            print(f"⚠️ Sobrescrevendo {pasta_destino}")
         else:
             os.makedirs(pasta_destino)
-            try:
-                withTime, noTime = transcrever_audio(caminho_audio, modelo=modelo, exportar=True, dispositivo=dispositivo)
+        try:
+            withTime, noTime = transcrever_audio(caminho_audio, modelo=modelo, exportar=True, dispositivo=dispositivo)
 
-                print("\n📝 Criando resumo")
-                tituloMD, resumoMD = gerar_resumo_markdown(noTime)
-                print("\n✅ Resumo pronto!")
+            print("\n📝 Criando resumo")
+            tituloMD, resumoMD = gerar_resumo_markdown(noTime)
+            print("\n✅ Resumo pronto!")
 
-                print("\n📝 Criando guia de estudos")
-                tituloGuia, guiaEstudos = gerar_guia_estudos_markdown(resumoMD)
-                print("\n✅ Guia de estudos pronto!")
+            print("\n📝 Criando guia de estudos")
+            tituloGuia, guiaEstudos = gerar_guia_estudos_markdown(resumoMD)
+            print("\n✅ Guia de estudos pronto!")
 
-                print("\n📝 Criando questões")
-                tituloQuestoes, QuestoesMD = gerar_questoes_markdown(resumoMD)
-                print("\n✅ Questoes prontas!")
+            print("\n📝 Criando questões")
+            tituloQuestoes, QuestoesMD = gerar_questoes_markdown(resumoMD)
+            print("\n✅ Questoes prontas!")
 
-                print('\n📝Criando Flashcards')
-                jsonFlashCards = gerarFlashcards(resumoMD)
-                criar_baralho(flashcards=jsonFlashCards, nome_baralho=nome_arquivo_sem_ext)
-                print("\n✅ Flashcards prontas!")
+            print('\n📝Criando Flashcards')
+            jsonFlashCards = gerarFlashcards(resumoMD)
+            criar_baralho(flashcards=jsonFlashCards, nome_baralho=nome_arquivo_sem_ext)
+            print("\n✅ Flashcards prontas!")
 
-                gerar_pdf_markdown(resumoMD, pasta_destino, "resumo.pdf")
-                gerar_pdf_markdown(guiaEstudos, pasta_destino, "guia.pdf")
-                gerar_pdf_markdown(QuestoesMD, pasta_destino, "questoes.pdf")
+            gerar_pdf_markdown(resumoMD, pasta_destino, "resumo.pdf")
+            gerar_pdf_markdown(guiaEstudos, pasta_destino, "guia.pdf")
+            gerar_pdf_markdown(QuestoesMD, pasta_destino, "questoes.pdf")
 
-                # Mover os arquivos usados para a pasta destino
-                mover_arquivos_processados(pasta_destino, nome_arquivo_sem_ext)
+            # Mover os arquivos usados para a pasta destino
+            mover_arquivos_processados(pasta_destino, nome_arquivo_sem_ext)
 
-            except Exception as erro:
-                print(f"❌ Erro: {erro}")
+        except Exception as erro:
+            print(f"❌ Erro: {erro}")
