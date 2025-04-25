@@ -488,18 +488,14 @@ def criar_baralho(flashcards, nome_baralho):
 
 # 🧪 Execução direta
 if __name__ == "__main__":
-    #args = argumentos_cli()
     diretorio = "."  
-    #arquivo_audio = args.audio if args.audio else escolher_arquivo_audio(diretorio)
     arquivo_audio = escolher_arquivo_audio(diretorio)
 
     if arquivo_audio:
         caminho_audio = os.path.join(diretorio, arquivo_audio)
-        #modelo = args.modelo
         modelo = 'medium'
         dispositivo = escolher_dispositivo()
 
-        # Usa o nome do arquivo de áudio (sem extensão) para criar a pasta
         nome_arquivo_sem_ext = os.path.splitext(arquivo_audio)[0]
         pasta_destino = os.path.join("aulas_processadas", nome_arquivo_sem_ext)
 
