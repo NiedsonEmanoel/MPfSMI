@@ -38,7 +38,6 @@ Nesta playlist, você encontrará:
 - Dicas para otimizar o desempenho
 
 ---
----
 
 ## 🃏 Flashcards para Anki (via Gemini + genanki)
 
