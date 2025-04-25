@@ -5,3 +5,4 @@ weasyprint
 markdown
 pandas
 genanki
+google-genai

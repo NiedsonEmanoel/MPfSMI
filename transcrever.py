@@ -13,7 +13,10 @@ import requests
 import markdown
 from weasyprint import HTML
 import shutil
-
+from google import genai
+import json
+import genanki
+import random
 
 # Lê a chave da API do arquivo gemini.key
 with open("gemini.key", "r") as file:
@@ -285,7 +288,7 @@ def salvar_transcricoes(com_tempos, sem_tempos, caminho_audio):
         print(f"📁 Arquivo salvo: {nome}")
 
 def mover_arquivos_processados(pasta_destino, base_nome):
-    extensoes = (".mp3", ".wav", ".m4a", ".txt")
+    extensoes = (".mp3", ".wav", ".m4a", ".txt", '.apkg')
     for arquivo in os.listdir("."):
         if base_nome in arquivo and arquivo.endswith(extensoes):
             origem = os.path.join(".", arquivo)
@@ -393,6 +396,95 @@ def gerar_questoes_markdown(texto_base):
         return f"{titulo}.pdf", markdown_clean
     else:
         raise Exception(f"Erro na requisição: {response.status_code}\n{response.text}")
+
+def gerarFlashcards(resumo):
+    client = genai.Client(
+        api_key=API_KEY
+    )
+
+    prompt = f"""
+
+    A partir do conteúdo abaixo (resumo da transcrição), crie flashcards no formato JSON, com foco em aprendizado acadêmico e médico.
+
+    A resposta será convertida em .apkg, então:
+
+    - Use formatação JSON limpa, apenas o json sem nenhuma outra explicação
+    - Cada flashcard deve ser composto por uma pergunta e sua resposta
+    - Inclua as informações médicas essenciais, de forma objetiva e concisa
+
+    Contexto essencial:
+
+    Este conteúdo será usado para revisões rápidas e eficazes, com foco em memorização ativa para estudantes de medicina. Para isso, os flashcards devem:
+
+    - Apresentar perguntas clínicas relevantes baseadas no conteúdo
+    - Utilizar a estrutura "pergunta e resposta" de forma clara e objetiva
+    - Evitar usar questões muito genéricas ou vagas
+
+    Responda apenas com o JSON. Não adicione explicações extras.
+
+    A estrutura da resposta deve ser:
+
+    **Pergunta:** [Texto da pergunta]
+    **Resposta:** [Texto da resposta]
+
+    Resumo para base dos flashcards:
+        {resumo}
+    """
+
+    response = client.models.generate_content(
+        model='gemini-2.0-flash',
+        contents=prompt
+    )
+    # Remove a primeira e a última linha da resposta
+    preJson = '\n'.join(response.text.splitlines()[1:-1])
+
+    # Converte string para JSON
+    flashcards = json.loads(preJson)
+
+    return(flashcards)
+
+def criar_baralho(flashcards, nome_baralho):
+    # IDs únicos (você pode gerar novos com random.randint se quiser)
+    modelo_id = 1607392319
+    baralho_id = random.randint(1 << 28, (1 << 30) - 1)
+
+    # Modelo do Anki
+    modelo = genanki.Model(
+        model_id=modelo_id,
+        name='MPfSMl',
+        fields=[
+            {'name': 'Pergunta'},
+            {'name': 'Resposta'},
+        ],
+        templates=[
+            {
+                'name': 'Cartão MPfSMl',
+                'qfmt': '{{Pergunta}}',
+                'afmt': '{{FrontSide}}<hr id="answer">{{Resposta}}',
+            },
+        ]
+    )
+
+    nameBaralho = 'MPfSMl::'+nome_baralho
+
+    # Baralho
+    baralho = genanki.Deck(
+        deck_id=baralho_id,
+        name=nameBaralho
+    )
+
+    # Adiciona flashcards
+    for card in flashcards:
+        nota = genanki.Note(
+            model=modelo,
+            fields=[card['Pergunta'], card['Resposta']]
+        )
+        baralho.add_note(nota)
+
+    # Salva na raiz
+    nome_arquivo = f'{nome_baralho}.apkg'
+    genanki.Package(baralho).write_to_file(nome_arquivo)
+    print(f'Baralho "{nome_arquivo}" criado com sucesso na raiz!')
 
 # 🧪 Execução direta
 if __name__ == "__main__":
