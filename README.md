@@ -13,7 +13,31 @@ Este projeto permite transcrever áudios (como aulas, reuniões, entrevistas) us
 - Limpeza automática de arquivos temporários.
 
 ---
+## 🚀 Executando com Google Colab
 
+Para facilitar a execução do projeto sem necessidade de instalação local, disponibilizamos um notebook interativo no Google Colab. Basta clicar no link abaixo para acessar e executar o código diretamente no navegador:
+
+[Executar no Google Colab](https://colab.research.google.com/drive/1hcmTnKLOlGSji4GJS7dIMkub6WJRGZ_1?usp=sharing)
+
+**Vantagens do uso do Colab:**
+
+- **Sem instalação necessária:** Execute o código diretamente no navegador.
+- **Ambiente pré-configurado:** O Colab já possui diversas bibliotecas instaladas, facilitando a execução do código.
+- **Acesso a GPUs gratuitas:** O Colab oferece acesso a GPUs, o que pode acelerar o processamento de tarefas intensivas.
+
+## 📚 Aprenda a Usar o MPfSMI no Google Colab
+
+Para entender como utilizar o MPfSMI no Colab, confira a playlist abaixo. Ela oferece um passo a passo detalhado para ajudá-lo a executar o projeto sem dificuldades:
+
+[Como Usar o MPfSMI no Google Colab - Playlist no YouTube](LINK_DA_PLAYLIST_AQUI)
+
+Nesta playlist, você encontrará:
+
+- Como carregar e executar o notebook no Colab
+- Exemplos práticos de uso
+- Dicas para otimizar o desempenho
+
+---
 ## 🚀 Requisitos
 
 ### Dependências Python
