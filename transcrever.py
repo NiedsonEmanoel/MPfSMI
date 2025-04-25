@@ -518,6 +518,11 @@ if __name__ == "__main__":
                 tituloQuestoes, QuestoesMD = gerar_questoes_markdown(resumoMD)
                 print("\n✅ Questoes prontas!")
 
+                print('\n📝Criando Flashcards')
+                jsonFlashCards = gerarFlashcards(resumoMD)
+                criar_baralho(flashcards=jsonFlashCards, nome_baralho=nome_arquivo_sem_ext)
+                print("\n✅ Flashcards prontas!")
+
                 gerar_pdf_markdown(resumoMD, pasta_destino, "resumo.pdf")
                 gerar_pdf_markdown(guiaEstudos, pasta_destino, "guia.pdf")
                 gerar_pdf_markdown(QuestoesMD, pasta_destino, "questoes.pdf")
