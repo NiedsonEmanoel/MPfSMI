@@ -88,14 +88,6 @@ headers = {
     "Content-Type": "application/json"
 }
 
-def argumentos_cli():
-    parser = argparse.ArgumentParser(description="Transcrição e resumo de aulas com Whisper + Gemini")
-
-    parser.add_argument('--audio', type=str, help='Caminho para o arquivo de áudio a ser processado')
-    parser.add_argument('--modelo', type=str, default='base', help='Modelo do Whisper a ser usado (base, small, medium, large, etc.)')
-
-    return parser.parse_args()
-
 def gerar_pdf_markdown(markdown_text, pasta_destino, nome_pdf):
     html_content = markdown.markdown(markdown_text, extensions=["extra", "tables", "fenced_code"])
     full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{notion_style}</head><body>{html_content}</body></html>"
