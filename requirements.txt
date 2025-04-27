@@ -6,3 +6,5 @@ markdown
 pandas
 genanki
 google-genai
+selenium
+webdriver-manager
