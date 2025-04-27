@@ -8,3 +8,4 @@ genanki
 google-genai
 selenium
 webdriver-manager
+#wkhtmltopdf
