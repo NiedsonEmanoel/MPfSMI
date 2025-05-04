@@ -175,7 +175,7 @@ python transcrever.py --audio meuaudio.mp3 --modelo medium
 ## ⚠️ Observações
 
 - O script remove automaticamente marcações extras de Markdown.
-- A performance depende do modelo Whisper escolhidp.
+- A performance depende do modelo Whisper escolhido.
 - Detecta `cuda` - GPU Nvidia automaticamente.
 
 ---
@@ -185,18 +185,6 @@ python transcrever.py --audio meuaudio.mp3 --modelo medium
 - Python 3.8+
 - Windows
 - 8GB+ RAM
----
-
-## 🧼 Limpeza
-
-Todos os arquivos temporários são automaticamente removidos ou movidos para `aulas_processadas/`.
-
----
-
-## 📜 Licença
-
-Uso educacional/pessoal. Verifique os termos das APIs usadas.
-
 ---
 
 ## 👨‍💻 Autor
