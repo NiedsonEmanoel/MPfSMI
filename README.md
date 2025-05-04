@@ -12,10 +12,9 @@ Este projeto permite transcrever áudios (como aulas, reuniões, entrevistas) us
 - 📄 **Exportação como PDF estilizado**, com títulos e emojis.
 - 🧠 **Geração de flashcards Anki** automáticos via `genanki`.
 - 📝 **Criação de guias de estudo em PDF**, baseados nos resumos Gemini.
-- ❓ **Geração de questões clínicas** em `.docx` com base no conteúdo da aula.
-- 🖼️ **Geração de imagens anatômicas e diagramas** via API externa.
-- 🎙️ **Modo improdutivo**: mesmo com ruídos/barulhos, o sistema tenta extrair o máximo de conteúdo.
-- 🧼 **Limpeza automática de arquivos temporários** ao final de cada execução.
+- ❓ **Geração de questões clínicas** em `.pdf` com base no conteúdo da aula.
+- 🖼️ **Busca de imagens anatômicas e diagramas** via API externa.
+- 🎙️ **Modo escuta profunda**: mesmo com ruídos/barulhos, o sistema tenta extrair o máximo de conteúdo.
 
 ---
 
