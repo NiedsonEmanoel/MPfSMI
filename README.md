@@ -23,7 +23,7 @@ Este projeto permite transcrever áudios (como aulas, reuniões, entrevistas) us
 
 O diagrama abaixo resume de forma clara o funcionamento do MPfSMl — desde a entrada de áudio até a geração dos materiais de estudo automatizados:
 
-![Fluxo do MPfSMl](docs/mpfsml-folder.png)
+![Fluxo do MPfSMl](https://raw.githubusercontent.com/NiedsonEmanoel/MPfSMI/refs/heads/main/MPfSML.png)
 
 > O sistema foi pensado para transformar qualquer aula (inclusive aulas ruins) em aprendizado ativo, integrado e automatizado, com mínimo esforço do aluno.
 
