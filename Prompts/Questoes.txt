@@ -1,0 +1,61 @@
+    A partir do conteúdo abaixo, crie 10 questões de cada nível de dificuldade (fácil, médio, difícil), com foco em reforço de compreensão médica e acadêmica. Siga as regras:
+
+    - Crie 10 questões fáceis, 10 médias e 10 difíceis.
+    - Não agrupe as questões em fáceis, médias ou dificeis, o aluno só deve saber ao ver o gabarito.
+    - Faça da questão 01 até a 30, sem agrupar por dificuldade.
+    - As respostas das questões devem estar APENAS excluivamente na área de gabaritos.
+    - As questões devem ser formuladas em formatos variados:
+      - Questões objetivas (com alternativas)
+      - Questões de resposta curta
+      - Questões de verdadeiro ou falso
+      - Casos clínicos
+
+    - As alternativas, ou as respostas curtas, devem ser realistas e educativas, com a resposta correta claramente identificada.
+    - As alternativas devem ser equilibradas em dificuldade, sem nenhuma óbvia ou excessivamente fácil.
+    - Cada questão deve ser seguida de justificativa detalhada explicando o raciocínio por trás da resposta correta.
+    - Não forneça explicações adicionais além das instruções acima.
+
+    A saída deve estar no formato Markdown, com as questões bem organizadas e agradáveis para visualização e impressão. Evite usar links e mantenha a formatação simples, para que as questões sejam facilmente legíveis e prontas para serem impressas. As alternativas devem ser listadas de forma clara, e cada justificativa deve vir logo após a questão correspondente.
+
+    Para as questões de resposta curta, inclua um espaço de linhas (sublinhado) do tamanho necessário para a resposta, usando a seguinte formatação:
+    ________________________
+
+    Saída: Responda no formato Markdown com as seguintes informações:
+
+    ### Questões:
+
+    1.  **Pergunta:** (enunciado da questão)
+       - Alternativas:
+         - A) Alternativa 1
+         - B) Alternativa 2
+         - C) Alternativa 3
+         - D) Alternativa 4
+         - E) Alternativa 5
+
+    2.  **Pergunta:** (enunciado da questão)
+       - Alternativas:
+         - A) Verdadeiro
+         - B) Falso (justificar aqui:______________________________)
+
+    3. **Pergunta:** (enunciado da questão)
+       **Resposta:**
+       _____________________________________________________________
+
+    Repita as 30 questões, seguindo o mesmo formato
+
+    ### Gabarito:
+    1. **Resposta:** A
+       **Justificativa:** Explicação detalhada do porquê a alternativa A é a correta.
+       **Nível: fácil/médio/difícil**
+
+    2. **Resposta:** B
+       **Justificativa:** Explicação detalhada do porquê a alternativa B é a correta.
+       **Nível: fácil/médio/difícil**
+
+    3. **Resposta:** Falso
+       **Justificativa:** Explicação detalhada do que tornou a questão falsa ou verdadeira.
+       **Nível: fácil/médio/difícil**
+
+    (Repita para todas as questões)
+
+    ### Texto base:

@@ -1,0 +1,29 @@
+  A partir do conteúdo abaixo (resumo da transcrição), crie flashcards no formato JSON, com foco em aprendizado acadêmico e médico.
+
+  A resposta será convertida em .apkg, então:
+
+  - Use formatação JSON limpa, apenas o json sem nenhuma outra explicação
+  - Cada flashcard deve ser composto por uma pergunta e sua resposta
+  - Inclua as informações médicas essenciais, de forma objetiva e concisa
+
+  Contexto essencial:
+
+  Este conteúdo será usado para revisões rápidas e eficazes, com foco em memorização ativa para estudantes de medicina. Para isso, os flashcards devem:
+
+  - Apresentar perguntas clínicas relevantes baseadas no conteúdo
+  - Utilizar a estrutura "pergunta e resposta" de forma clara e objetiva
+  - Evitar usar questões muito genéricas ou vagas
+
+  A resposta deve conter APENAS uma lista JSON, sem nenhuma explicação fora do JSON.
+
+  Cada item deve ter esta estrutura:
+
+  [
+    {{
+      "Pergunta": "Qual é o principal mediador da resposta inflamatória aguda?",
+      "Resposta": "A histamina é um dos principais mediadores da resposta inflamatória aguda."
+    }},
+    ...
+  ]
+
+  Resumo para base dos flashcards:

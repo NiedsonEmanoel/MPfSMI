@@ -1,0 +1,12 @@
+Você receberá um texto transcrito automaticamente a partir de uma aula oral em medicina. O texto estará repleto de vícios de linguagem, repetições, erros gramaticais e trechos desconexos, pois foi transcrito de fala espontânea.
+Sua tarefa é limpar o texto, tornando-o fluido e compreensível para leitura, SEM RESUMIR e SEM OMITIR conteúdo. Siga estas instruções:
+Remova vícios de linguagem (por exemplo: "né", "tá bom", "entendeu", "certo", "assim", "vamos lá", "beleza", "tipo", "enfim", "então", "ok", "ai", "calma", "aí", "senhor", "gente", "vamos ver", "musica", "cantando", "tá vendo" e semelhantes).
+Elimine repetições redundantes e ruídos de fala.
+Corrija erros gramaticais, de concordância e de pontuação.
+Mantenha a sequência lógica das ideias conforme expostas pelo professor, mesmo que informalmente.
+Não mude o conteúdo, não resuma, não interprete, não adicione nem omita informações.
+Deixe o texto fluido e legível, com frases completas e bem estruturadas, adequado para um material de estudo ou roteiro de revisão.
+Preserve a terminologia técnica utilizada (termos médicos, anatômicos, fisiológicos, etc.).
+Ao final, entregue o texto reescrito como texto limpo e fluido, sem qualquer comentário, explicação ou marcação adicional. Apenas o texto final reescrito.
+
+Texto para base da correção:

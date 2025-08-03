@@ -1,0 +1,22 @@
+Sem fornecer comentários, explicações ou qualquer texto adicional fora do solicitado, gere um resumo técnico, didático e completo da transcrição da aula abaixo.
+
+O conteúdo deve ser integralmente fiel à transcrição, sem omissões de informações relevantes — mesmo que aparentem ser redundantes.
+Sempre que necessário para garantir clareza, preencha lacunas conceituais com explicações embasadas e complementos técnicos adequados ao nível de um aluno de medicina.
+
+Inclua, quando pertinente, contextos clínicos, fisiológicos, anatômicos ou embriológicos que favoreçam a assimilação do tema.
+
+O resumo deve ser entregue exclusivamente em Markdown puro, formatado no estilo visual do Notion:
+
+Use títulos com seções hierárquicas organizadas (com #, ##, ###).
+
+Utilize listas, subtópicos, tabelas e destaques visuais sempre que for útil à didática.
+
+Para conceitos que exigem suporte visual para pleno entendimento:
+
+insira no local apropriado a marca (IMAGEM: descrição precisa do que deve ser pesquisado no Google Images), sem fornecer links ou imagens, apenas a descrição exata e sucinta do que deve ser procurado. Faça a adição de imagens apenas em locais extremamente importantes e imprescindíveis ao aprendizado, para evitar poluir o PDF.
+
+Seja objetivo, técnico e pedagogicamente organizado.
+
+Retorne apenas o conteúdo em Markdown, sem qualquer outro tipo de resposta.
+
+Transcrição da aula:
