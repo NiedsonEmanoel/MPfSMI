@@ -1,92 +1,58 @@
-#MPfSMl - Medical pratice for Students on Machine learn 
-#Niedson Emanoel, 21/04/2025.
+# MPfSMl - Medical Practice for Students on Machine Learning
+# Niedson Emanoel, 21/04/2025.
+# REFACTORY MADE 03/08/2025
 
-import whisper
-import argparse
+# Built-in
 import os
 from datetime import datetime
-import torch
-import nltk
-from nltk.corpus import stopwords
+import json
 import string
+import random
+import shutil
+
+# External
+import torch
+import whisper
+import nltk
 import requests
 import markdown
 from weasyprint import HTML
-import shutil
-from google import genai
-import json
 import genanki
-import random
+from google import genai
+from nltk.corpus import stopwords
 
-# Lê a chave da API do arquivo gemini.key
+# Leitura da API Key
+if not os.path.exists("gemini.key"):
+    raise FileNotFoundError("Arquivo 'gemini.key' não encontrado!")
 with open("gemini.key", "r") as file:
     API_KEY = file.read().strip()
 
+# Leitura do CSS
+css_path = "Prompts/notionStyle.css"
+if not os.path.exists(css_path):
+    raise FileNotFoundError(f"Arquivo CSS não encontrado: {css_path}")
+with open(css_path, "r", encoding="utf-8") as f:
+    css_content = f.read()
+
+#Prompt Resumo
+promptResumoPath = "Prompts/Resumo.txt"
+if not os.path.exists(promptResumoPath):
+    raise FileNotFoundError(f"Arquivo de Prompt [Resumo] não encontrado: {promptResumoPath}")
+with open(promptResumoPath, "r", encoding="utf-8") as f:
+    promptResumo = f.read()
+
+#Prompt NormatizarFala
+promptNormatizarPath = "Prompts/NormatizarFala.txt"
+if not os.path.exists(promptNormatizarPath):
+    raise FileNotFoundError(f"Arquivo de Prompt [Normatizar] não encontrado: {promptNormatizarPath}")
+with open(promptNormatizarPath, "r", encoding="utf-8") as f:
+    promptNormatizar = f.read()
+
+#Ext
+notion_style = f"<style>\n{css_content}\n</style>"
+# URL da API Gemini
 URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={API_KEY}"
-
-notion_style = """
-<style>
-  body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-      line-height: 1.6;
-      font-size: 16px;
-      color: #333;
-      background: #fff;
-  }
-
-  h1, h2, h3 {
-      border-bottom: 1px solid #eaeaea;
-      padding-bottom: 0.3em;
-      margin-top: 1.4em;
-  }
-
-  code {
-      background-color: #f6f8fa;
-      padding: 2px 4px;
-      border-radius: 3px;
-      font-size: 90%;
-      font-family: 'Courier New', Courier, monospace;
-  }
-
-  pre code {
-      background-color: #f6f8fa;
-      display: block;
-      padding: 1em;
-      overflow-x: auto;
-  }
-
-  blockquote {
-      border-left: 4px solid #dfe2e5;
-      padding: 0 1em;
-      color: #6a737d;
-  }
-
-  table {
-      border-collapse: collapse;
-      width: 100%;
-  }
-
-  th, td {
-      border: 1px solid #dfe2e5;
-      padding: 6px 13px;
-  }
-
-  th {
-      background-color: #f6f8fa;
-  }
-
-  @page {
-      margin: 20mm;
-  }
-</style>
-"""
-
-headers = {
-    "Content-Type": "application/json"
-}
+headers = {"Content-Type": "application/json"}
 
 def gerar_pdf_markdown(markdown_text, pasta_destino, nome_pdf):
     html_content = markdown.markdown(markdown_text, extensions=["extra", "tables", "fenced_code"])
@@ -97,54 +63,7 @@ def gerar_pdf_markdown(markdown_text, pasta_destino, nome_pdf):
 
 def gerar_guia_estudos_markdown(transcricao: str) -> tuple[str, str]:
     prompt_estudo = f"""
-A partir do conteúdo abaixo (resumo), crie uma guia de estudos personalizada em formato Markdown, com foco em aprendizado acadêmico e médico.
-
-A resposta será convertida em PDF, então:
-
-- Use formatação Markdown limpa
-- Use títulos, listas e divisões visuais claras
-- Não inclua elementos interativos ou links clicáveis
-
-Contexto essencial:
-
-Este resumo foi gerado a partir de um sistema automatizado que converte áudios de estudo em texto. A partir dele, serão produzidos:
-
-- Questões objetivas e clínicas, classificadas por dificuldade
-- Flashcards com os principais pontos e termos
-
-Por isso, a guia de estudos deve:
-
-- Indicar os conhecimentos prévios essenciais para compreender o tema
-- Apresentar um checklist organizado com o que estudar primeiro
-- Explicar como e quando utilizar as questões e flashcards gerados
-- Evitar sugestões genéricas como "ensinar a alguém" ou "fazer resumos próprios"
-
-A estrutura da resposta deve ser:
-
-# Guia de Estudos: [Tema do Resumo]
-
-## Visão Geral
-Descreva em poucas linhas o tema central e sua relevância médica.
-
-## Pré-requisitos
-Liste tópicos que o estudante deve dominar antes de aprofundar o conteúdo. Ex: anatomia relacionada, princípios básicos, etc.
-
-## Checklist de Estudo
-Organize os principais pontos do conteúdo em forma de lista ordenada. Cada item deve representar uma etapa de estudo.
-
-## Aplicação Direta
-Oriente o estudante a:
-
-- Usar as questões geradas para treinar sua compreensão e identificar lacunas
-- Utilizar os flashcards para revisão contínua e memorização
-- Revisar frequentemente os erros nas questões para reforçar áreas frágeis
-
-Não inclua sugestões genéricas como ensinar o conteúdo para outra pessoa.
-
-## Plano de Estudo Sugerido
-Organize um cronograma de revisão dividido por dias (ex: 3, 7 ou 14 dias), integrando o uso das questões e dos flashcards gerados com o resumo.
-
-Resumo para base do estudo:
+{promptNormatizar}
 {transcricao}
 """
 
@@ -171,13 +90,7 @@ Resumo para base do estudo:
 
 def gerar_resumo_markdown(transcricao: str) -> tuple[str, str]:
     prompt = f"""
-Sem fornecer nenhum tipo de feedback, comentário ou explicação adicional, gere um resumo completo e didático da transcrição da aula que vou enviar a seguir. O objetivo é facilitar a compreensão de um aluno de medicina, então complemente com informações relevantes sempre que considerar útil para a assimilação do conteúdo.
-
-O resumo deve ser entregue em Markdown puro, como se fosse um código-fonte, com títulos estilizados com emojis, no estilo visual do Notion.
-
-Apenas retorne o conteúdo em Markdown, sem nenhuma outra resposta textual.
-
-Transcrição da aula:
+{promptResumo}
 {transcricao}
 """
 
