@@ -9,3 +9,4 @@ google-genai
 selenium
 webdriver-manager
 #wkhtmltopdf
+pdfkit

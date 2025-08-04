@@ -47,8 +47,11 @@ def generate_resume(
             markdown_chunks.append(chunk.text)
 
         logger.info("Resumo gerado com sucesso.")
-        return ''.join(markdown_chunks)
-
+        Resumen = ''.join(markdown_chunks)
+        # Preparar o Markdown para busca de imagens
+        Resumen = searchImage.preparar_markdown_para_busca(Resumen)
+        return Resumen
+    
     except Exception as e:
         logger.exception("Erro ao gerar o resumo.")
         raise RuntimeError(f"Erro ao gerar o resumo: {e}")
@@ -61,5 +64,4 @@ coração
 
 """
     resultado = generate_resume(exemplo_transcricao)
-    resultado = searchImage.preparar_markdown_para_busca(resultado)
     print(resultado)
