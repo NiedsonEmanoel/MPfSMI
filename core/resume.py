@@ -1,76 +1,66 @@
 import os
+import logging
 from google import genai
 from google.genai import types
+from typing import Optional
+from utilities import load_file_content, build_config
+import searchImage 
+# Configuração de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-def generateResume(transcricao: str) -> str:
-    key_path = os.path.join(os.path.dirname(__file__), "..", "gemini.key")
-    key_path = os.path.abspath(key_path)  # Resolve caminho absoluto
+def generate_resume(
+    transcricao: str,
+    key_path: Optional[str] = "../gemini.key",
+    prompt_path: Optional[str] = "../Prompts/Resumo.txt",
+    model_name: str = "gemini-2.5-pro"
+) -> str:
+    """
+    Gera um resumo em Markdown a partir de uma transcrição, usando Gemini API.
+    """
+    try:
+        # Carregar chave e prompt
+        api_key = load_file_content(key_path, "chave da API Gemini")
+        prompt_text = load_file_content(prompt_path, "prompt do resumo")
 
-    if not os.path.exists(key_path):
-        raise FileNotFoundError("Arquivo 'gemini.key' não encontrado!")
+        # Inicializar cliente Gemini
+        client = genai.Client(api_key=api_key)
 
-    with open(key_path, "r") as file:
-        API_KEY = file.read().strip()
+        # Preparar entrada
+        contents = [
+            types.Content(
+                role="user",
+                parts=[types.Part.from_text(text=transcricao)],
+            )
+        ]
 
-    client = genai.Client(
-        api_key=API_KEY,
-    )
+        config = build_config(prompt_text)
 
-    model = "gemini-2.5-pro"
-    contents = [
-        types.Content(
-            role="user",
-            parts=[
-                types.Part.from_text(text=transcricao),
-            ],
-        ),
-    ]
-    tools = [
-        types.Tool(googleSearch=types.GoogleSearch()),
-    ]
-    generate_content_config = types.GenerateContentConfig(
-        thinking_config=types.ThinkingConfig(thinking_budget=-1),
-        tools=tools,
-        system_instruction=[
-            types.Part.from_text(text="""Sem fornecer comentários, explicações ou qualquer texto adicional fora do solicitado, gere um resumo técnico, didático e completo da transcrição da aula abaixo.
+        # Gerar conteúdo
+        logger.info("Iniciando geração do resumo com Gemini...")
+        markdown_chunks = []
+        for chunk in client.models.generate_content_stream(
+            model=model_name,
+            contents=contents,
+            config=config,
+        ):
+            markdown_chunks.append(chunk.text)
 
-O conteúdo deve ser integralmente fiel à transcrição, sem omissões de informações relevantes — mesmo que aparentem ser redundantes.
-Sempre que necessário para garantir clareza, preencha lacunas conceituais com explicações embasadas e complementos técnicos adequados ao nível de um aluno de medicina.
+        logger.info("Resumo gerado com sucesso.")
+        return ''.join(markdown_chunks)
 
-Inclua, quando pertinente, contextos clínicos, fisiológicos, anatômicos ou embriológicos que favoreçam a assimilação do tema.
+    except Exception as e:
+        logger.exception("Erro ao gerar o resumo.")
+        raise RuntimeError(f"Erro ao gerar o resumo: {e}")
 
-O resumo deve ser entregue exclusivamente em Markdown puro, formatado no estilo visual do Notion:
 
-Use títulos com seções hierárquicas organizadas (com #, ##, ###).
-
-Utilize listas, subtópicos, tabelas e destaques visuais sempre que for útil à didática.
-
-Para conceitos que exigem suporte visual para pleno entendimento:
-
-insira no local apropriado a marca (IMAGEM: descrição precisa do que deve ser pesquisado no Google Images), sem fornecer links ou imagens, apenas a descrição exata e sucinta do que deve ser procurado. Faça a adição de imagens apenas em locais extremamente importantes e imprescindíveis ao aprendizado, para evitar poluir o PDF.
-
-Seja objetivo, técnico e pedagogicamente organizado.
-
-Retorne apenas o conteúdo em Markdown, sem qualquer outro tipo de resposta.
-"""),
-        ],
-    )
-
-    # Acumula o markdown gerado
-    markdown_chunks = []
-
-    for chunk in client.models.generate_content_stream(
-        model=model,
-        contents=contents,
-        config=generate_content_config,
-    ):
-        markdown_chunks.append(chunk.text)
-
-    return ''.join(markdown_chunks)
-
-# Exemplo de uso:
+# Execução direta para testes
 if __name__ == "__main__":
-    texto_transcricao = "INSIRA AQUI SUA TRANSCRIÇÃO"  # Substituir por entrada real
-    markdown_resultado = generateResume(texto_transcricao)
-    print(markdown_resultado)  # ou use como retorno para salvar em PDF, etc.
+    exemplo_transcricao = """
+coração
+
+"""
+    resultado = generate_resume(exemplo_transcricao)
+    resultado = searchImage.preparar_markdown_para_busca(resultado)
+    print(resultado)

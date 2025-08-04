@@ -18,5 +18,3 @@ insira no local apropriado a marca (IMAGEM: descrição precisa do que deve ser 
 Seja objetivo, técnico e pedagogicamente organizado.
 
 Retorne apenas o conteúdo em Markdown, sem qualquer outro tipo de resposta.
-
-Transcrição da aula:
