@@ -93,20 +93,3 @@ def preparar_markdown_para_busca(texto_markdown):
     novo_markdown = re.sub(r"\(IMAGEM:\s*(.*?)\)", substituir, texto_markdown)
     driver.quit()
     return novo_markdown
-
-if __name__ == "__main__":
-    chromePath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-    markdown_original = """
-    # Anatomia do Coração
-
-    (IMAGEM: anatomia externa do coração humano, visão anterior)
-
-    O coração humano é um órgão muscular...
-
-    (IMAGEM: artérias coronárias em dissecção anatômica)
-    """
-
-    # Aplicar a função
-    markdown_final = preparar_markdown_para_busca(markdown_original)
-
-    print(markdown_final)
