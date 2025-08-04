@@ -6,6 +6,10 @@ import os
 import markdown
 import pdfkit
 from utilities import load_file_content
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def gerar_pdf_markdown(markdown_text, pasta_destino, nome_pdf):
     # markdown_text = preparar_markdown_para_busca(markdown_text) - Markdown já está preparado com as imagens, ja do resume.py
