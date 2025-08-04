@@ -1,6 +1,13 @@
+# MPfSMl - Medical Practice for Students on Machine Learning
+# Author: Niedson Emanoel - 03/04/2025
+# REFACTORY MADE 04/08/2025
+    # This file contains utility functions for loading file content, building configuration for the Gemini model, and selecting the device for execution and other tasks.
+    # Este arquivo contém funções utilitárias para carregar o conteúdo de arquivos, construir a configuração para o modelo Gemini e selecionar o dispositivo para execução e entre outros.
+
 import os
 from google.genai import types
 import logging
+import torch
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -27,3 +34,10 @@ def build_config(prompt: str) -> types.GenerateContentConfig:
         tools=[types.Tool(googleSearch=types.GoogleSearch())],
         system_instruction=[types.Part.from_text(text=prompt)],
     )
+
+def escolher_dispositivo() -> str:
+    """
+    Seleciona o dispositivo para execução (GPU ou CPU).
+    Retorna "cuda" se disponível, caso contrário "cpu".
+    """
+    return "cuda" if torch.cuda.is_available() else "cpu"

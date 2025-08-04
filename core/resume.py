@@ -5,10 +5,10 @@ from google.genai import types
 from typing import Optional
 from utilities import load_file_content, build_config
 import searchImage 
+searchImage.chromePath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 # Configuração de logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 def generate_resume(
     transcricao: str,

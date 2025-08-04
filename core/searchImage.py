@@ -10,10 +10,10 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+chromePath = ''
 
-chromePath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+chrome_options = Options()
 
-chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = chromePath
 driver = webdriver.Chrome(options=chrome_options)
 
@@ -95,6 +95,7 @@ def preparar_markdown_para_busca(texto_markdown):
     return novo_markdown
 
 if __name__ == "__main__":
+    chromePath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
     markdown_original = """
     # Anatomia do Coração
 
