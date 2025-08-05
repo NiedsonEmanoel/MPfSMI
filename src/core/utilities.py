@@ -7,6 +7,9 @@
 import os
 from google.genai import types
 import torch
+import nltk
+from nltk.corpus import stopwords
+import string
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -41,3 +44,23 @@ def escolher_dispositivo() -> str:
     Retorna "cuda" se disponível, caso contrário "cpu".
     """
     return "cuda" if torch.cuda.is_available() else "cpu"
+
+def remover_stopwords(texto: str) -> str:
+    """Remove stopwords do texto em português.
+    Args:
+        texto (str): Texto de entrada.
+    """
+    try:
+        stopwords.words('portuguese')
+    except LookupError:
+        nltk.download('stopwords')
+
+    stop_words = set(stopwords.words("portuguese"))
+    texto_sem_pontuacao = texto.translate(str.maketrans('', '', string.punctuation))
+    palavras = texto_sem_pontuacao.split()
+
+    palavras_filtradas = [
+        palavra for palavra in palavras
+        if palavra.lower() not in stop_words
+    ]
+    return " ".join(palavras_filtradas)

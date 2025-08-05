@@ -626,6 +626,8 @@ def escolher_arquivo_audio(diretorio):
     print('Ver documentação.')
     return (2/0)/0
 
+
+#MAIN .PY
 def transcrever_Resumir(diretorio):
     arquivo_audio = escolher_arquivo_audio(diretorio)
 
