@@ -27,6 +27,10 @@ def load_file_content(file_path: str, description: str = "arquivo") -> str:
     with open(file_path, "r", encoding="utf-8") as file:
         return file.read()
 
+def formatar_timestamp(segundos):
+    h, m = divmod(int(segundos), 3600)
+    m, s = divmod(m, 60)
+    return f"{h:02}:{m:02}:{s:02}"
 
 def build_config(prompt: str) -> types.GenerateContentConfig:
     """
