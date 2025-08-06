@@ -1,0 +1,59 @@
+# MPfSMl - Medical Practice for Students on Machine Learning
+# Niedson Emanoel, 21/04/2025.
+# REFACTORY MADE 03/08/2025
+
+import logging
+from google import genai
+from google.genai import types
+from typing import Optional
+from utilities import load_file_content, build_config
+
+# Configuração de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def generate_questions(
+    transcricao: str,
+    key_path: Optional[str] = "../../gemini.key",
+    prompt_path: Optional[str] = "../Prompts/Questoes.txt",
+    model_name: str = "gemini-2.5-pro"
+) -> str:
+    """
+    Gera Questoes em Markdown a partir de uma transcrição, usando Gemini API.
+    """
+    try:
+        # Carregar chave e prompt
+        api_key = load_file_content(key_path, "chave da API Gemini")
+        prompt_text = load_file_content(prompt_path, "prompt das questoes")
+
+        # Inicializar cliente Gemini
+        client = genai.Client(api_key=api_key)
+
+        # Preparar entrada
+        contents = [
+            types.Content(
+                role="user",
+                parts=[types.Part.from_text(text=transcricao)],
+            )
+        ]
+
+        config = build_config(prompt_text)
+
+        # Gerar conteúdo
+        logger.info("Iniciando geração das questoes com Gemini...")
+        markdown_chunks = []
+        for chunk in client.models.generate_content_stream(
+            model=model_name,
+            contents=contents,
+            config=config,
+        ):
+            markdown_chunks.append(chunk.text)
+
+        logger.info("Questoes geradas com sucesso.")
+        Questoes = ''.join(markdown_chunks)
+
+        return Questoes
+    
+    except Exception as e:
+        logger.exception("Erro ao gerar Questoes.")
+        raise RuntimeError(f"Erro ao gerar Questoes: {e}")
