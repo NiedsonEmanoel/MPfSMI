@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 def generate_resume(
     transcricao: str,
-    key_path: Optional[str] = "../../gemini.key",
-    prompt_path: Optional[str] = "../Prompts/Resumo.txt",
+    apikey: str,
+    prompt_path: Optional[str] = "Resumo.txt",
     model_name: str = "gemini-2.5-pro"
 ) -> str:
     """
@@ -24,7 +24,8 @@ def generate_resume(
     """
     try:
         # Carregar chave e prompt
-        api_key = load_file_content(key_path, "chave da API Gemini")
+        api_key = apikey
+        
         prompt_text = load_file_content(prompt_path, "prompt do resumo")
 
         # Inicializar cliente Gemini

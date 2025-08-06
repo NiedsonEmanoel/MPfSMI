@@ -10,4 +10,6 @@ selenium
 webdriver-manager
 wkhtmltopdf
 pdfkit
-streamlit
+streamlit>=1.47
+torchvision
+torchaudio

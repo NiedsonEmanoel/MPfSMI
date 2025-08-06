@@ -72,13 +72,13 @@ def criar_baralho(flashcards, nome_baralho):
 
 def gerarFlashcards(
     resumo: str,
-    key_path: Optional[str] = "../../gemini.key",
-    prompt_path: Optional[str] = "../Prompts/GerarFlashCards.txt",
+    apikey: str,
+    prompt_path: Optional[str] = "GerarFlashCards.txt",
     model_name: str = "gemini-2.5-pro"
 ):
     try:
         # Modelo que você quer usar
-        api_key = load_file_content(key_path, "chave da API Gemini")
+        api_key = apikey
         prompt_text = load_file_content(prompt_path, "prompt dos flashcards")
 
         client = genai.Client(api_key=api_key)

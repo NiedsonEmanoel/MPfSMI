@@ -23,16 +23,14 @@ def gerar_pdf_markdown(markdown_text, pasta_destino, nome_pdf):
 
     # Converte markdown para HTML
     html_content = markdown.markdown(markdown_text, extensions=["extra", "tables", "fenced_code"])
-    css_content = load_file_content('../Prompts/notionStyle.css')
+    
+    css_content = load_file_content('notionStyle.css',"prompt do css")
+    
     full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'><style>{css_content}</style></head><body>{html_content}</body></html>"
 
     # Opções de formatação do PDF
     options = {
         'page-size': 'A4',
-        'margin-top': '2cm',
-        'margin-right': '2cm',
-        'margin-bottom': '2cm',
-        'margin-left': '2cm',
         'encoding': 'UTF-8',
         'no-outline': None,
         'footer-center': rodape_texto,
@@ -41,10 +39,14 @@ def gerar_pdf_markdown(markdown_text, pasta_destino, nome_pdf):
 
     try:
         if os.name == 'nt':
-            # Caminho absoluto para o executável incluso no projeto
-            wkhtmltopdf_path = os.path.abspath(os.path.join('..', 'binaries', 'wkhtmltopdf_winX86', 'bin', 'wkhtmltopdf.exe'))
+            # Caminho absoluto baseado na pasta deste arquivo (pdfExport.py)
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            wkhtmltopdf_path = os.path.join(base_dir, '..', 'binaries', 'wkhtmltopdf_winX86', 'bin', 'wkhtmltopdf.exe')
+            wkhtmltopdf_path = os.path.abspath(wkhtmltopdf_path)
+
             if not os.path.exists(wkhtmltopdf_path):
                 raise FileNotFoundError(f"Binário do wkhtmltopdf não encontrado em: {wkhtmltopdf_path}")
+
             config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
             pdfkit.from_string(full_html, caminho_pdf, options=options, configuration=config)
         else:

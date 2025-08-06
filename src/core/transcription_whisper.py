@@ -34,7 +34,7 @@ def salvar_transcricoes(com_tempos, sem_tempos, caminho_audio):
             f.write(conteudo)
         print(f"📁 Arquivo salvo: {nome}")
 
-def transcrever_audio(caminho_audio, modelo="base", exportar=True):
+def transcrever_audio(caminho_audio, modelo="base", exportar=False):
     dispositivo = escolher_dispositivo()
     if not os.path.exists(caminho_audio):
         raise FileNotFoundError(f"Arquivo não encontrado: {caminho_audio}")

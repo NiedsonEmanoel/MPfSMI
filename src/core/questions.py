@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 
 def generate_questions(
     transcricao: str,
-    key_path: Optional[str] = "../../gemini.key",
-    prompt_path: Optional[str] = "../Prompts/Questoes.txt",
+    apikey: str,
+    prompt_path: Optional[str] = "Questoes.txt",
     model_name: str = "gemini-2.5-pro"
 ) -> str:
     """
@@ -23,7 +23,7 @@ def generate_questions(
     """
     try:
         # Carregar chave e prompt
-        api_key = load_file_content(key_path, "chave da API Gemini")
+        api_key = apikey
         prompt_text = load_file_content(prompt_path, "prompt das questoes")
 
         # Inicializar cliente Gemini
