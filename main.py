@@ -1,2 +1,12 @@
-from src.core import utilities as functions
-functions.escolher_dispositivo()
+from src.core import (
+    flashcards,
+    pdfExport,
+    questions,
+    resume,
+    searchImage,
+    transcription_whisper,
+    utilities,
+)
+
+if __name__ == "__main__":
+    print('main')

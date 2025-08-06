@@ -62,5 +62,3 @@ def transcrever_audio(caminho_audio, modelo="base", exportar=True):
         salvar_transcricoes(texto_com_tempos, texto_sem_tempos, caminho_audio)
 
     return texto_com_tempos, texto_sem_tempos
-
-withtime, noTime = transcrever_audio('audioteste.mp3', modelo='base', exportar=True)
