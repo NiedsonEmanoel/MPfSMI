@@ -112,16 +112,3 @@ def gerarFlashcards(
     except Exception as e:
         logger.exception("Erro ao gerar o Flashcard.")
         raise RuntimeError(f"Erro ao gerar o Flashcard: {e}")
-
-
-
-flash=gerarFlashcards(resumo="""
-A insuficiência cardíaca é uma síndrome clínica complexa caracterizada pela incapacidade do coração de bombear sangue adequadamente para suprir as necessidades metabólicas do organismo. Pode ser classificada como sistólica, quando há disfunção na contração ventricular, ou diastólica, quando há comprometimento no relaxamento e enchimento do ventrículo.
-
-Os principais sintomas incluem dispneia, fadiga e edema periférico. A ausculta pulmonar pode revelar estertores e a avaliação física frequentemente mostra turgência jugular e hepatomegalia. A classificação funcional de NYHA ajuda a avaliar a gravidade.
-
-Do ponto de vista fisiopatológico, a insuficiência cardíaca ativa sistemas compensatórios, como o sistema renina-angiotensina-aldosterona e o sistema nervoso simpático, que, apesar de inicialmente benéficos, contribuem para o agravamento da doença a longo prazo.
-
-O tratamento envolve mudanças no estilo de vida, uso de IECA, betabloqueadores, diuréticos e, em casos avançados, dispositivos como CDI ou transplante cardíaco. A monitorização constante e o ajuste da terapêutica são fundamentais para reduzir hospitalizações e melhorar a qualidade de vida do paciente.
-
-""")

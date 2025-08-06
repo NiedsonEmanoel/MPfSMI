@@ -1,3 +1,7 @@
+# MPfSMl - Medical Practice for Students on Machine Learning
+# Niedson Emanoel, 21/04/2025.
+# REFACTORY MADE 03/08/2025
+
 import os
 import whisper
 from datetime import datetime
