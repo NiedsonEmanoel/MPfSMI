@@ -5,7 +5,7 @@
 import os
 import markdown
 import pdfkit
-from utilities import load_file_content
+from .utilities import load_file_content
 import logging
 from datetime import datetime
 

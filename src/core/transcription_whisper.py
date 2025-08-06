@@ -5,7 +5,7 @@
 import os
 import whisper
 from datetime import datetime
-from utilities import remover_stopwords, escolher_dispositivo
+from .utilities import remover_stopwords, escolher_dispositivo
 sigla = "pt"  # Defina a sigla do idioma desejado, por exemplo, "pt" para português
 
 # Caminho do diretório atual (src/core)

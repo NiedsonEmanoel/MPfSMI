@@ -6,7 +6,7 @@ import logging
 from google import genai
 from google.genai import types
 from typing import Optional
-from utilities import load_file_content, build_config
+from .utilities import load_file_content, build_config
 import json
 import re
 import random
