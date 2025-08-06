@@ -1,4 +1,4 @@
-  A partir do conteúdo abaixo (resumo da transcrição), crie flashcards no formato JSON, com foco em aprendizado acadêmico e médico.
+  A partir do conteúdo abaixo (resumo da transcrição de uma aula), crie até 25 flashcards no formato JSON, com foco em aprendizado acadêmico e médico.
 
   A resposta será convertida em .apkg, então:
 
@@ -25,5 +25,3 @@
     }},
     ...
   ]
-
-  Resumo para base dos flashcards:

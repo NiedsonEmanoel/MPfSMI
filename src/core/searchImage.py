@@ -1,3 +1,7 @@
+# MPfSMl - Medical Practice for Students on Machine Learning
+# Niedson Emanoel, 21/04/2025.
+# REFACTORY MADE 03/08/2025
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
