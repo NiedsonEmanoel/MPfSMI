@@ -4,6 +4,13 @@ from datetime import datetime
 from utilities import remover_stopwords, escolher_dispositivo
 sigla = "pt"  # Defina a sigla do idioma desejado, por exemplo, "pt" para português
 
+# Caminho do diretório atual (src/core)
+caminho_atual = os.path.dirname(os.path.abspath(__file__))
+# Caminho absoluto para src/binaries/ffmpeg/bin
+caminho_ffmpeg = os.path.abspath(os.path.join(caminho_atual, "..", "binaries", "ffmpeg", "bin"))
+# Adiciona ao PATH
+os.environ["PATH"] = caminho_ffmpeg + os.pathsep + os.environ["PATH"]
+
 def formatar_timestamp(segundos):
     h, m = divmod(int(segundos), 3600)
     m, s = divmod(m, 60)
