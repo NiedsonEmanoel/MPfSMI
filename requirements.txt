@@ -13,3 +13,4 @@ pdfkit
 streamlit>=1.47
 torchvision
 torchaudio
+youtube-transcript-api>=0.6.2
