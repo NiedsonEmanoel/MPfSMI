@@ -52,7 +52,7 @@ def gerar_pdf_markdown(markdown_text, pasta_destino, nome_pdf):
         else:
             # Para Linux (ex: servidores ou Colab)
             #config = pdfkit.configuration(wkhtmltopdf='/opt/bin/wkhtmltopdf')
-            pdfkit.from_string(full_html, caminho_pdf, options=options, configuration=config)
+            pdfkit.from_string(full_html, caminho_pdf, options=options)
 
         logger.info(f"✅ PDF gerado com sucesso: {caminho_pdf}")
     

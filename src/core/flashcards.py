@@ -23,8 +23,11 @@ def extrair_json(texto):
         if match:
             return json.loads(match.group())
         else:
+            return {}
             raise ValueError("JSON não encontrado no texto.")
+            
     except Exception as e:
+        return {}
         raise RuntimeError(f"Falha ao extrair JSON: {e}")
     
 def criar_baralho(flashcards, nome_baralho):
