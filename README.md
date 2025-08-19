@@ -31,26 +31,6 @@ O diagrama abaixo resume de forma clara o funcionamento do MPfSMl — desde a en
 
 ---
 
-## 🧭 Fluxo do MPfSML  
-
-```mermaid
-flowchart LR
-    A[🎙️ Áudio/📺 Vídeo] --> B[🔊 Transcrição (Whisper/YouTube)]
-    B --> C[✍️ Resumo (Gemini API)]
-    B --> D[❓ Questões (Gemini API)]
-    B --> E[🃏 Flashcards (Gemini API + Anki)]
-    C --> F[📄 PDF]
-    D --> G[📄 PDF]
-    E --> H[📦 .apkg]
-    F --> I[📦 ZIP Final]
-    G --> I
-    H --> I
-```
-
-> Em apenas alguns cliques, o sistema gera **resumos, questões e flashcards**, prontos para revisão médica.  
-
----
-
 ## 🚀 Como Executar  
 
 ### 1. Clonar o repositório  
