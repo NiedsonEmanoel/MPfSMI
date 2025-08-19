@@ -60,11 +60,11 @@ def autenticar_api():
 # =======================
 
 def processar_conteudo(api_key):
-    fonte = st.radio(
-        "Selecione a fonte:",
-        ["📂 Arquivo de Áudio", "📺 Vídeo do YouTube"],
-        horizontal=True
+    fonte = st.segmented_control(
+        "",
+        options=["📂 Arquivo de Áudio", "📺 Vídeo do YouTube"]
     )
+
 
     if fonte == "📂 Arquivo de Áudio":
         uploaded_file = st.file_uploader(
