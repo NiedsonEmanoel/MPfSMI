@@ -21,14 +21,16 @@ st.set_page_config(page_title="MPfSML", page_icon="img/rephraise_logo.png")
 
 # Remover espaços superiores e elementos de Streamlit
 st.markdown("""
-<style>
-.css-1egvi7u {margin-top: -4rem;}
-.css-qrbaxs, .css-15tx938 {min-height: 0.0rem;}
-.css-znku1x a {color: #9d03fc;}  /* Link color (ambos temas) */
-.stSpinner > div > div {border-top-color: #9d03fc;}
-header, #MainMenu, footer {visibility: hidden;}
-</style>
+
 """, unsafe_allow_html=True)
+
+#<style>
+#.css-1egvi7u {margin-top: -4rem;}
+#.css-qrbaxs, .css-15tx938 {min-height: 0.0rem;}
+#.css-znku1x a {color: #9d03fc;}  /* Link color (ambos temas) */
+#.stSpinner > div > div {border-top-color: #9d03fc;}
+#header, #MainMenu, footer {visibility: hidden;}
+#</style>
 
 # =======================
 # 🔑 AUTENTICAÇÃO DA API
