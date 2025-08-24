@@ -17,20 +17,23 @@ from src.core import (
 # =======================
 # 🎨 CONFIGURAÇÃO DE PÁGINA E ESTILO
 # =======================
-st.set_page_config(page_title="MPfSML", page_icon="img/rephraise_logo.png")
+
+os.makedirs(".streamlit", exist_ok=True)
+with open(".streamlit/config.toml", "w") as f:
+    f.write('[theme]\nbase="light"\n')
+
+st.set_page_config(page_title="MPfSML", page_icon="🧠")
 
 # Remover espaços superiores e elementos de Streamlit
 st.markdown("""
-
+<style>
+.css-1egvi7u {margin-top: -4rem;}
+.css-qrbaxs, .css-15tx938 {min-height: 0.0rem;}
+.css-znku1x a {color: #9d03fc;}  /* Link color (ambos temas) */
+.stSpinner > div > div {border-top-color: #9d03fc;}
+header, #MainMenu, footer {visibility: hidden;}
+</style>
 """, unsafe_allow_html=True)
-
-#<style>
-#.css-1egvi7u {margin-top: -4rem;}
-#.css-qrbaxs, .css-15tx938 {min-height: 0.0rem;}
-#.css-znku1x a {color: #9d03fc;}  /* Link color (ambos temas) */
-#.stSpinner > div > div {border-top-color: #9d03fc;}
-#header, #MainMenu, footer {visibility: hidden;}
-#</style>
 
 # =======================
 # 🔑 AUTENTICAÇÃO DA API
@@ -63,14 +66,14 @@ def autenticar_api():
 
 def processar_conteudo(api_key):
     fonte = st.segmented_control(
-        "",
-        options=["📂 Arquivo de Áudio", "📺 Vídeo do YouTube"]
+        "📥 Selecione a fonte do conteúdo:",
+        options=["📂 Arquivo de Áudio", "📺 Vídeo do YouTube", '📝 Texto Bruto']
     )
 
 
     if fonte == "📂 Arquivo de Áudio":
         uploaded_file = st.file_uploader(
-            "Envie um arquivo de áudio (.mp3, .wav, .m4a)", 
+            "🎵 Envie um arquivo de áudio (.mp3, .wav, .m4a)", 
             type=["mp3", "wav", "m4a"],
             label_visibility="visible"
         )
@@ -84,10 +87,18 @@ def processar_conteudo(api_key):
         }
 
         selection = st.segmented_control(
-            "Escolha o modelo Whisper",
+            "🧩 Escolha o modelo Whisper",
             options=list(option_map.keys()),
             format_func=lambda opt: option_map[opt],
             selection_mode="single",
+            help=(
+                "Selecione o tamanho do modelo Whisper para transcrição:\n\n"
+                "- tiny → Muito rápido, menor precisão.\n"
+                "- base → Equilíbrio entre rapidez e qualidade.\n"
+                "- small → Melhor precisão, ainda leve.\n"
+                "- medium → Alta precisão, mais lento.\n"
+                "- large → Máxima precisão, exige mais tempo e memória."
+            ),
             default="base"
         )
         modelo = selection if selection else "base"
@@ -106,13 +117,31 @@ def processar_conteudo(api_key):
                 temp_audio_path = tmp.name
 
             with st.status('🔄 Processando o áudio...', expanded=True) as status:
-                st.write("Transcrevendo o áudio...")
+                st.write("🎚️ Transcrevendo o áudio...")
                 with_time, no_time = transcription_whisper.transcrever_audio(temp_audio_path, modelo=modelo)
                 gerar_materiais(no_time, api_key, audioname, status)
                 os.remove(temp_audio_path)
 
+    elif fonte == "📝 Texto Bruto":
+        titulo = st.text_input(
+            "📌 Digite um título para o material:",
+            placeholder="Ex: Aula de Fisiologia - Sistema Respiratório"
+        )
+
+        texto_bruto = st.text_area(
+            "Cole ou digite o texto que deseja processar:",
+            help="Insira aqui o conteúdo em texto puro (por exemplo, transcrição já feita ou anotações de aula)."
+        )
+
+        if titulo.strip() and texto_bruto.strip() and st.button("▶️ Processar texto", use_container_width=True):
+            with st.status('🔄 Processando o texto...', expanded=True) as status:
+                try:
+                    gerar_materiais(texto_bruto, api_key, titulo.strip().replace(" ", "_"), status)
+                except Exception as e:
+                    st.error(f"❌ Erro: {e}")
+
     elif fonte == "📺 Vídeo do YouTube":
-        url = st.text_input("Cole o link do vídeo do YouTube:")
+        url = st.text_input("🎬 Cole o link do vídeo do YouTube:")
         if url and st.button("▶️ Processar vídeo", use_container_width=True):
             with st.status('🔄 Buscando transcrição no YouTube...', expanded=True) as status:
                 try:
@@ -127,15 +156,15 @@ def gerar_materiais(transcricao, api_key, nome_base, status):
     questoes_pdf = os.path.join(temp_dir, 'questoes.pdf')
     flashcards_apkg = os.path.join(temp_dir, f'{nome_base}.apkg')
 
-    st.write("Criando resumo...")
+    st.write("📝 Criando resumo...")
     resume_markdown = resume.generate_resume(transcricao=transcricao, apikey=api_key)
     pdfExport.gerar_pdf_markdown(resume_markdown, pasta_destino=temp_dir, nome_pdf='resumo.pdf')
 
-    st.write("Criando questões...")
+    st.write("❓ Criando questões...")
     questions_markdown = questions.generate_questions(transcricao=transcricao, apikey=api_key)
     pdfExport.gerar_pdf_markdown(questions_markdown, pasta_destino=temp_dir, nome_pdf='questoes.pdf')  
 
-    st.write("Criando flashcards...")
+    st.write("🎴 Criando flashcards...")
     jsonFlashcards = flashcards.gerarFlashcards(resumo=transcricao, apikey=api_key)
     flashcards.criar_baralho(jsonFlashcards, nome_baralho=os.path.join(temp_dir, nome_base))
 
