@@ -113,5 +113,5 @@ def gerarFlashcards(
         logger.info("Flashcards gerados com sucesso.")
         return(response)
     except Exception as e:
-        logger.exception("Erro ao gerar o Flashcard.")
-        raise RuntimeError(f"Erro ao gerar o Flashcard: {e}")
+        print('flashcard vazio')
+        return {}
