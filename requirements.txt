@@ -7,7 +7,7 @@ pandas
 genanki
 google-genai
 selenium
-webdriver-manager==4.0.2
+webdriver-manager>=4.0.2
 wkhtmltopdf
 pdfkit
 streamlit>=1.47
