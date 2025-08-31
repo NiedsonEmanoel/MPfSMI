@@ -6,8 +6,8 @@ import logging
 from google import genai
 from google.genai import types
 from typing import Optional
-from .utilities import load_file_content, build_config
-from .searchImage import preparar_markdown_para_busca
+from .utilities import load_file_content, build_config #.
+from .searchImage import preparar_markdown_para_busca #.
 
 # Configuração de logging
 logging.basicConfig(level=logging.INFO)
@@ -52,6 +52,7 @@ def generate_resume(
             markdown_chunks.append(chunk.text)
 
         logger.info("Resumo gerado com sucesso.")
+        print(markdown_chunks)
         Resumen = ''.join(markdown_chunks)
         # Preparar o Markdown para busca de imagens
         Resumen = preparar_markdown_para_busca(Resumen)

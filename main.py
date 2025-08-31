@@ -26,6 +26,7 @@ st.markdown("""
 .css-znku1x a {color: #9d03fc;}  /* Link color (ambos temas) */
 .stSpinner > div > div {border-top-color: #9d03fc;}
 header, #MainMenu, footer {visibility: hidden;}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -130,7 +131,7 @@ def processar_audio(api_key):
                     status.update(
                         label="✅ Processamento concluído!",
                         state="complete",
-                        expanded=False
+                        expanded=True
                     )
 
                     # Botão de download
