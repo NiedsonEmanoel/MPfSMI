@@ -1,7 +1,10 @@
 {
-  "name": "Python 3",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "name": "Python 3 + wkhtmltopdf + ffmpeg + Selenium",
   "image": "mcr.microsoft.com/devcontainers/python:1-3.11-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
   "customizations": {
     "codespaces": {
       "openFiles": [
@@ -13,11 +16,12 @@
       "settings": {},
       "extensions": [
         "ms-python.python",
-        "ms-python.vscode-pylance"
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
       ]
     }
   },
-  "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; [ -f requirements.txt ] && pip3 install --user -r requirements.txt; pip3 install --user streamlit; echo '✅ Packages installed and Requirements met'",
+  "updateContentCommand": "sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y wget gnupg unzip curl wkhtmltopdf ffmpeg chromium chromium-driver && [ -f requirements.txt ] && pip3 install --user -r requirements.txt; pip3 install --user streamlit selenium && echo '✅ Environment ready with wkhtmltopdf, ffmpeg, selenium & chromium'",
   "postAttachCommand": {
     "server": "streamlit run main.py --server.enableCORS false --server.enableXsrfProtection false"
   },
