@@ -11,12 +11,18 @@ from src.core import (
     resume,
     searchImage,
     transcription_whisper,
+    transcription_youtube,
 )
 
 # =======================
 # 🎨 CONFIGURAÇÃO DE PÁGINA E ESTILO
 # =======================
-st.set_page_config(page_title="MPfSML", page_icon="img/rephraise_logo.png")
+
+os.makedirs(".streamlit", exist_ok=True)
+with open(".streamlit/config.toml", "w") as f:
+    f.write('[theme]\nbase="light"\n')
+
+st.set_page_config(page_title="MPfSML", page_icon="🧠")
 
 # Remover espaços superiores e elementos de Streamlit
 st.markdown("""
@@ -26,7 +32,6 @@ st.markdown("""
 .css-znku1x a {color: #9d03fc;}  /* Link color (ambos temas) */
 .stSpinner > div > div {border-top-color: #9d03fc;}
 header, #MainMenu, footer {visibility: hidden;}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -58,11 +63,17 @@ def autenticar_api():
 # =======================
 # 📂 UPLOAD E PROCESSAMENTO DE ÁUDIO
 # =======================
-def processar_audio(api_key):
-    with st.expander("🎙️ MPfSML – Processamento de Áudio", expanded=True):
 
+def processar_conteudo(api_key):
+    fonte = st.segmented_control(
+        "📥 Selecione a fonte do conteúdo:",
+        options=["📂 Arquivo de Áudio", "📺 Vídeo do YouTube", '📝 Texto Bruto']
+    )
+
+
+    if fonte == "📂 Arquivo de Áudio":
         uploaded_file = st.file_uploader(
-            "Envie um arquivo de áudio (.mp3, .wav, .m4a)", 
+            "🎵 Envie um arquivo de áudio (.mp3, .wav, .m4a)", 
             type=["mp3", "wav", "m4a"],
             label_visibility="visible"
         )
@@ -76,16 +87,23 @@ def processar_audio(api_key):
         }
 
         selection = st.segmented_control(
-            "Escolha o modelo Whisper",
+            "🧩 Escolha o modelo Whisper",
             options=list(option_map.keys()),
             format_func=lambda opt: option_map[opt],
             selection_mode="single",
+            help=(
+                "Selecione o tamanho do modelo Whisper para transcrição:\n\n"
+                "- tiny → Muito rápido, menor precisão.\n"
+                "- base → Equilíbrio entre rapidez e qualidade.\n"
+                "- small → Melhor precisão, ainda leve.\n"
+                "- medium → Alta precisão, mais lento.\n"
+                "- large → Máxima precisão, exige mais tempo e memória."
+            ),
             default="base"
         )
-
         modelo = selection if selection else "base"
 
-        if uploaded_file:
+        if uploaded_file and st.button("▶️ Processar áudio", use_container_width=True):
             audio_bytes = uploaded_file.read()
             file_size_mb = len(audio_bytes) / (1024 * 1024)
 
@@ -93,68 +111,91 @@ def processar_audio(api_key):
                 st.error(f"❌ Arquivo de {file_size_mb:.2f} MB excede o limite de 1 GB.")
                 st.stop()
 
-            if st.button("▶️ Processar áudio", use_container_width=True):
-                with tempfile.NamedTemporaryFile(delete=False, suffix=f".{uploaded_file.name.split('.')[-1]}") as tmp:
-                    audioname = uploaded_file.name.split('.')[0]
-                    tmp.write(audio_bytes)
-                    temp_audio_path = tmp.name
+            with tempfile.NamedTemporaryFile(delete=False, suffix=f".{uploaded_file.name.split('.')[-1]}") as tmp:
+                audioname = uploaded_file.name.split('.')[0]
+                tmp.write(audio_bytes)
+                temp_audio_path = tmp.name
 
-                with st.status('🔄 Processando o áudio...', expanded=True) as status:
-                    st.write("Transcrevendo o áudio...")
-                    with_time, no_time = transcription_whisper.transcrever_audio(temp_audio_path, modelo=modelo)
-                    
-                    # Caminhos temporários para os arquivos gerados
-                    temp_dir = tempfile.mkdtemp()
-                    resumo_pdf = os.path.join(temp_dir, 'resumo.pdf')
-                    questoes_pdf = os.path.join(temp_dir, 'questoes.pdf')
-                    flashcards_apkg = os.path.join(temp_dir, f'{audioname}.apkg')
+            with st.status('🔄 Processando o áudio...', expanded=True) as status:
+                st.write("🎚️ Transcrevendo o áudio...")
+                with_time, no_time = transcription_whisper.transcrever_audio(temp_audio_path, modelo=modelo)
+                gerar_materiais(no_time, api_key, audioname, status)
+                os.remove(temp_audio_path)
 
-                    st.write("Criando resumo...")
-                    resume_markdown = resume.generate_resume(transcricao=no_time, apikey=api_key)
-                    pdfExport.gerar_pdf_markdown(resume_markdown, pasta_destino=temp_dir, nome_pdf='resumo.pdf')
-                    
-                    st.write("Criando questões...")
-                    questions_markdown = questions.generate_questions(transcricao=no_time, apikey=api_key)
-                    pdfExport.gerar_pdf_markdown(questions_markdown, pasta_destino=temp_dir, nome_pdf='questoes.pdf')  
-                     
-                    st.write("Criando flashcards...")
-                    jsonFlashcards = flashcards.gerarFlashcards(resumo=no_time, apikey=api_key)
-                    flashcards.criar_baralho(jsonFlashcards, nome_baralho=os.path.join(temp_dir, audioname))
-                    
-                    # Compactar em ZIP
-                    zip_path = os.path.join(temp_dir, f"{audioname}_materiais.zip")
-                    with zipfile.ZipFile(zip_path, 'w') as zipf:
-                        zipf.write(resumo_pdf, 'resumo.pdf')
-                        zipf.write(questoes_pdf, 'questoes.pdf')
-                        zipf.write(flashcards_apkg, f'{audioname}.apkg')
+    elif fonte == "📝 Texto Bruto":
+        titulo = st.text_input(
+            "📌 Digite um título para o material:",
+            placeholder="Ex: Aula de Fisiologia - Sistema Respiratório"
+        )
 
-                    status.update(
-                        label="✅ Processamento concluído!",
-                        state="complete",
-                        expanded=True
-                    )
+        texto_bruto = st.text_area(
+            "Cole ou digite o texto que deseja processar:",
+            help="Insira aqui o conteúdo em texto puro (por exemplo, transcrição já feita ou anotações de aula)."
+        )
 
-                    # Botão de download
-                    with open(zip_path, "rb") as f:
-                        st.download_button(
-                            label="📥 Baixar materiais (ZIP)",
-                            data=f,
-                            file_name=f"{audioname}_materiais.zip",
-                            mime="application/zip"
-                        )
+        if titulo.strip() and texto_bruto.strip() and st.button("▶️ Processar texto", use_container_width=True):
+            with st.status('🔄 Processando o texto...', expanded=True) as status:
+                try:
+                    gerar_materiais(texto_bruto, api_key, titulo.strip().replace(" ", "_"), status)
+                except Exception as e:
+                    st.error(f"❌ Erro: {e}")
 
-                    # Limpeza final dos arquivos temporários
-                   
-                    os.remove(temp_audio_path)
-                    os.remove(resumo_pdf)
-                    os.remove(questoes_pdf)
-                    os.remove(flashcards_apkg)
-                    os.remove(zip_path)
-                    os.rmdir(temp_dir)
-                
+    elif fonte == "📺 Vídeo do YouTube":
+        url = st.text_input("🎬 Cole o link do vídeo do YouTube:")
+        if url and st.button("▶️ Processar vídeo", use_container_width=True):
+            with st.status('🔄 Buscando transcrição no YouTube...', expanded=True) as status:
+                try:
+                    no_time = transcription_youtube.transcrever_youtube(url)
+                    gerar_materiais(no_time, api_key, "youtube_video", status)
+                except Exception as e:
+                    st.error(f"❌ Erro: {e}")
 
-        else:
-            st.badge("📂 Faça o upload de um áudio para iniciar o processamento.")
+def gerar_materiais(transcricao, api_key, nome_base, status):
+    temp_dir = tempfile.mkdtemp()
+    resumo_pdf = os.path.join(temp_dir, 'resumo.pdf')
+    questoes_pdf = os.path.join(temp_dir, 'questoes.pdf')
+    flashcards_apkg = os.path.join(temp_dir, f'{nome_base}.apkg')
+
+    st.write("📝 Criando resumo...")
+    resume_markdown = resume.generate_resume(transcricao=transcricao, apikey=api_key)
+    pdfExport.gerar_pdf_markdown(resume_markdown, pasta_destino=temp_dir, nome_pdf='resumo.pdf')
+
+    st.write("❓ Criando questões...")
+    questions_markdown = questions.generate_questions(transcricao=transcricao, apikey=api_key)
+    pdfExport.gerar_pdf_markdown(questions_markdown, pasta_destino=temp_dir, nome_pdf='questoes.pdf')  
+
+    st.write("🎴 Criando flashcards...")
+    jsonFlashcards = flashcards.gerarFlashcards(resumo=transcricao, apikey=api_key)
+    flashcards.criar_baralho(jsonFlashcards, nome_baralho=os.path.join(temp_dir, nome_base))
+
+    # Compactar em ZIP
+    zip_path = os.path.join(temp_dir, f"{nome_base}_materiais.zip")
+    with zipfile.ZipFile(zip_path, 'w') as zipf:
+        zipf.write(resumo_pdf, 'resumo.pdf')
+        zipf.write(questoes_pdf, 'questoes.pdf')
+        zipf.write(flashcards_apkg, f'{nome_base}.apkg')
+
+    status.update(
+        label="✅ Processamento concluído!",
+        state="complete",
+        expanded=False
+    )
+
+    with open(zip_path, "rb") as f:
+        st.download_button(
+            label="📥 Baixar materiais (ZIP)",
+            data=f,
+            file_name=f"{nome_base}_materiais.zip",
+            mime="application/zip"
+        )
+
+    # Limpeza
+    os.remove(resumo_pdf)
+    os.remove(questoes_pdf)
+    os.remove(flashcards_apkg)
+    os.remove(zip_path)
+    os.rmdir(temp_dir)
+
 # =======================
 # 🧠 APLICATIVO PRINCIPAL
 # =======================
@@ -164,7 +205,7 @@ def maingen():
     
     autenticar_api()
     api_key = st.session_state.gemini_api_key
-    processar_audio(api_key)
+    processar_conteudo(api_key)
 
 # =======================
 # 🚀 EXECUÇÃO

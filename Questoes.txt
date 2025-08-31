@@ -1,31 +1,27 @@
-A partir do conteúdo abaixo, elabore um total de 50 questões distribuídas entre os três níveis de dificuldade (fácil, médio e difícil), com o objetivo de reforçar a compreensão médica e acadêmica. Siga as diretrizes abaixo com rigor:
+A partir do conteúdo abaixo, elabore um total de **25 questões** distribuídas entre três níveis de dificuldade (fácil, médio e difícil), para reforçar a compreensão médica e acadêmica.
 
-- Gere 15 questões fáceis, 20 médias e 15 difíceis.
-- As questões não devem ser agrupadas por nível de dificuldade. A identificação do nível deve estar presente **apenas no gabarito**.
-- Numere de 01 a 50, mantendo a sequência lógica.
-- As respostas corretas devem aparecer **exclusivamente** na seção de gabarito, nunca junto ao enunciado.
-- Varie o estilo das questões, incluindo:
-  - Objetivas com cinco alternativas (A a E)
-  - Verdadeiro ou falso
-  - Resposta curta
-  - Casos clínicos com alternativas ou resposta dissertativa
+- Gere **8 questões fáceis, 9 médias e 8 difíceis**.
+- As questões não devem ser agrupadas por nível de dificuldade; a identificação do nível deve estar presente **apenas no gabarito**.
+- Numere de 01 a 25, em sequência lógica.
+- As respostas corretas devem aparecer **somente no gabarito**, nunca junto ao enunciado.
 
-- Para questões objetivas:
-  - As alternativas devem ser plausíveis, sem que a correta seja óbvia ou excessivamente fácil.
-  - As alternativas devem ter um grau de dificuldade equilibrado e relevância clínica ou teórica.
+### Estilos de questões (variar entre elas):
+- **Objetivas (A–E)**
+- **Verdadeiro ou falso (com espaço para justificar os falsos)**
+- **Resposta curta (linha em branco)**
+- **Casos clínicos (objetiva ou dissertativa)**
 
-- Para questões de resposta curta:
-  - Utilize linhas sublinhadas como espaço para resposta, neste formato:
-    ___________________________
+### Regras para formulação:
+- Para as **objetivas**: alternativas devem ser plausíveis, sem “pegadinhas óbvias”, mas exigindo raciocínio clínico/teórico.
+- Para **resposta curta**: use linhas sublinhadas para espaço, assim:
+  ___________________________
+- Cada questão deve ter explicação técnica **detalhada** apenas no gabarito.
 
-- Cada questão deve ser seguida por sua respectiva justificativa (que virá apenas na parte do gabarito), explicando o raciocínio da resposta correta de forma didática e técnica.
+---
 
-- A saída deve ser gerada em formato Markdown, com boa organização visual e clara legibilidade para impressão.
-- Evite usar links ou formatações complexas. Foque em um visual limpo, técnico e funcional.
+### 📄 Saída esperada (Markdown):
 
-Formato de saída Markdown:
-
-### Questões:
+#### Questões:
 
 1. **Pergunta:** (enunciado da questão)
    - Alternativas:
@@ -38,28 +34,28 @@ Formato de saída Markdown:
 2. **Pergunta:** (enunciado da questão)
    - Alternativas:
      - A) Verdadeiro
-     - B) Falso (justifique se falso: ______________________________)
+     - B) Falso (justifique: ______________________________)
 
 3. **Pergunta:** (enunciado da questão)
    **Resposta:**
-   ___________________________________________
+   ___________________________
 
-(Continue até a questão 50, variando os formatos conforme descrito)
+(continue até a questão 25, variando os formatos)
 
 ---
 
-### Gabarito:
+#### Gabarito:
 
-1. **Resposta:** A  
-   **Justificativa:** (explicação técnica do porquê a alternativa A está correta)  
+1. **Resposta:** C
+   **Justificativa:** (explicação técnica e didática)
    **Nível:** fácil
 
-2. **Resposta:** Falso  
-   **Justificativa:** (explicação do porquê a afirmação está incorreta)  
+2. **Resposta:** Falso
+   **Justificativa:** (explicação detalhada)
    **Nível:** médio
 
-3. **Resposta:** (resposta curta)  
-   **Justificativa:** (explicação da resposta correta)  
+3. **Resposta:** (texto esperado)
+   **Justificativa:** (explicação técnica)
    **Nível:** difícil
 
-(Continue até a questão 50, com justificativas e níveis indicados)
+(continue até a questão 25)

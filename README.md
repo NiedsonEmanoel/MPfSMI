@@ -1,20 +1,23 @@
-# 🎧 MPfSMl - Medical Practice for Students on Machine Learning 
+# 🎧 MPfSML - Medical Practice for Students on Machine Learning  
 
-Este projeto permite transcrever áudios (como aulas, reuniões, entrevistas) usando o modelo [`whisper`](https://github.com/openai/whisper), gerar um resumo didático em Markdown com a API Gemini da Google, e exportar o conteúdo final como PDF estilizado no padrão visual do Notion.
+Um aplicativo em **Streamlit** que processa **áudios e vídeos de aulas médicas**, gerando automaticamente:  
+- 📄 **Resumos em PDF**  
+- ❓ **Listas de questões clínicas**  
+- 🃏 **Flashcards para Anki**  
+
+Tudo isso com **IA Gemini (Google)** e transcrição de áudio via **Whisper**.  
 
 ---
 
-## ✅ Funcionalidades
+## ✅ Funcionalidades  
 
-- 🎧 **Transcrição de áudio** (`.mp3`, `.wav`, `.m4a`) com timestamps, via Whisper.
-- 🧹 **Limpeza do texto** com remoção de stopwords, gerando versão limpa.
-- ✍️ **Resumo didático em Markdown** via **API Gemini** (estilo visual do Notion).
-- 📄 **Exportação como PDF estilizado**, com títulos e emojis.
-- 🧠 **Geração de flashcards Anki** automáticos via `genanki`.
-- 📝 **Criação de guias de estudo em PDF**, baseados nos resumos Gemini.
-- ❓ **Geração de questões clínicas** em `.pdf` com base no conteúdo da aula.
-- 🖼️ **Busca de imagens anatômicas e diagramas** via API externa.
-- 🎙️ **Modo escuta profunda**: mesmo com ruídos/barulhos, o sistema tenta extrair o máximo de conteúdo.
+- 🎙️ **Transcrição de áudio** (`.mp3`, `.wav`, `.m4a`) com modelos Whisper (tiny → large).  
+- 📺 **Transcrição de vídeos do YouTube** diretamente pela URL.  
+- ✍️ **Resumo didático em Markdown** via **API Gemini**, exportado como PDF.  
+- ❓ **Geração de questões clínicas** automáticas em PDF.  
+- 🃏 **Flashcards em `.apkg` para Anki**, prontos para revisão.  
+- 📦 **Download em ZIP** contendo todos os materiais gerados.  
+- 🚀 **Interface amigável em Streamlit**, sem necessidade de usar terminal.  
 
 ---
 
@@ -28,165 +31,94 @@ O diagrama abaixo resume de forma clara o funcionamento do MPfSMl — desde a en
 
 ---
 
-## 🚀 Executando com Google Colab
+## 🚀 Como Executar  
 
-Para facilitar a execução do projeto sem necessidade de instalação local, disponibilizamos um notebook interativo no Google Colab:
-
-[Executar no Google Colab](https://colab.research.google.com/drive/1hcmTnKLOlGSji4GJS7dIMkub6WJRGZ_1?usp=sharing)
-
-**Vantagens do uso do Colab:**
-
-- **Sem instalação necessária:** Execute o código diretamente no navegador.
-- **Ambiente pré-configurado:** O Colab já possui diversas bibliotecas instaladas.
-- **Acesso a GPUs gratuitas:** O Colab oferece acesso a GPUs para acelerar o processamento.
-
-## 📚 Aprenda a Usar o MPfSMI no Google Colab
-
-Confira a playlist com o passo a passo completo:
-
-[Como Usar o MPfSMI no Google Colab - Playlist no YouTube](LINK_DA_PLAYLIST_AQUI)
-
-Inclui:
-
-- Como carregar e executar o notebook no Colab
-- Exemplos práticos de uso
-- Dicas para otimizar o desempenho
-
----
-
-## 🃏 Flashcards para Anki (via Gemini + genanki)
-
-O **MPfSMl** também gera **flashcards automáticos** com base no conteúdo do resumo da aula.
-
-### 🔧 Como funciona:
-
-- O resumo é enviado para a **API Gemini** com prompt específico.
-- O retorno vem em **JSON**, com pares **Pergunta/Resposta**.
-- Os pares são convertidos para um baralho `.apkg` via [`genanki`](https://github.com/kerrickstaley/genanki).
-
-### 💡 Exemplo:
-
-| Frente (Pergunta)                                           | Verso (Resposta)                                                                 |
-|-------------------------------------------------------------|----------------------------------------------------------------------------------|
-| Qual é o principal mediador da resposta inflamatória aguda? | A histamina é um dos principais mediadores da resposta inflamatória aguda.      |
-
-### 🧠 Importar no Anki:
-
-1. Após processar a aula, localize o `.apkg` em `aulas_processadas/nome_do_audio/`
-2. Abra o Anki > `Arquivo > Importar`
-3. Selecione o arquivo
-
----
-
-## 🚀 Requisitos
-
-### Dependências Python
+### 1. Clonar o repositório  
 
 ```bash
-pip install openai-whisper torch nltk weasyprint markdown
+git clone https://github.com/SEU_USUARIO/MPfSML.git
+cd MPfSML
 ```
 
-### Dependências Externas
-
-#### 🔊 FFmpeg
-
-- [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
-
-#### 🖼️ GTK3 (para Windows):
-
-- [https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer)
-
-#### ⚡ CUDA (Opcional)
-
-```python
-import torch
-print(torch.cuda.is_available())
-```
-
----
-
-## 🔑 Chave da API Gemini
-
-1. Acesse: [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-2. Crie sua chave
-3. Crie o arquivo `gemini.key` na raiz do projeto e cole sua chave
-
-> **Importante**: Não compartilhe sua chave.
-
----
-
-## 📁 Estrutura
-
-```
-📂 seu_projeto/
-├── script.py
-├── gemini.key
-├── 📂 aulas_processadas/
-│   └── 📂 nome_do_audio/
-│       ├── resumo.pdf
-│       └── ...
-```
-
----
-
-## 🧠 Como Usar
-
-1. Coloque os áudios na mesma pasta do script.
-2. Verifique se `gemini.key` está correto.
-3. Execute o script:
-
-### 🎯 Modo rápido
+### 2. Instalar dependências  
 
 ```bash
-python transcrever.py 
+pip install -r requirements.txt
 ```
 
-### ⚙️ Modo avançado
+> Certifique-se de ter o **FFmpeg** instalado para o Whisper.  
+
+### 3. Rodar o aplicativo  
 
 ```bash
-python transcrever.py --audio meuaudio.mp3 --modelo medium 
+streamlit run main.py
 ```
 
-| Flag              | Descrição                                | Valor padrão |
-|-------------------|--------------------------------------------|--------------|
-| `--modelo`        | Modelo Whisper: `tiny`, `base`, `small`... | `base`       |
-| `--audio`         | Nome do arquivo de áudio                   | `none`       |
+O app abrirá no navegador em:  
+👉 [http://localhost:8501](http://localhost:8501)  
 
 ---
 
-## 🧪 Modelos Whisper
+## 🔑 Configuração da API Gemini  
 
-| Modelo   | Tamanho | Qualidade     | Performance     |
-|----------|---------|---------------|------------------|
-| `tiny`   | Leve    | Baixa         | Muito rápido     |
-| `base`   | Médio   | OK            | Rápido           |
-| `small`  | Bom     | Boa           | Ok               |
-| `medium` | Grande  | Muito boa     | Um pouco lento   |
-| `large`  | Enorme  | Excelente     | Lento            |
+1. Crie uma chave em: [Google AI Studio](https://aistudio.google.com/app/apikey)  
+2. No primeiro uso, insira sua chave na tela de login do app.  
+3. A chave será salva na **sessão do Streamlit**.  
 
 ---
 
-## 📝 Prompt Enviado ao Gemini
+## 📁 Estrutura do Projeto  
 
-> "Sem fornecer nenhum tipo de feedback [...] Texto da transcrição: (transcrição)"
+```
+📂 MPfSML/
+├── main.py                  # Aplicativo principal (Streamlit)
+├── 📂 src/core/              # Funções principais
+│   ├── resume.py            # Geração de resumos (Gemini)
+│   ├── questions.py         # Geração de questões (Gemini)
+│   ├── flashcards.py        # Geração de flashcards Anki
+│   ├── pdfExport.py         # Exportação para PDF
+│   ├── transcription_whisper.py  # Transcrição de áudio
+│   ├── transcription_youtube.py  # Transcrição de vídeos
+│   └── utilities.py
+├── requirements.txt
+├── img/
+│   ├── rephraise_logo.png
+│   └── image_banner.png
+```
 
 ---
 
-## ⚠️ Observações
+## 🃏 Flashcards Anki  
 
-- O script remove automaticamente marcações extras de Markdown.
-- A performance depende do modelo Whisper escolhido.
-- Detecta `cuda` - GPU Nvidia automaticamente.
+Os flashcards são gerados automaticamente em formato `.apkg`.  
+- Baseados no **conteúdo transcrito**.  
+- Estruturados em **Pergunta/Resposta**.  
+- Importáveis diretamente no **Anki**.  
 
 ---
 
-## 📌 Requisitos de Sistema
+## 🧪 Modelos Whisper  
 
-- Python 3.8+
-- Windows
-- 8GB+ RAM
+| Modelo   | Qualidade     | Velocidade |
+|----------|---------------|------------|
+| `tiny`   | Baixa         | Muito rápida |
+| `base`   | OK            | Rápida       |
+| `small`  | Boa           | Moderada     |
+| `medium` | Muito boa     | Mais lenta   |
+| `large`  | Excelente     | Lenta        |
+
 ---
 
-## 👨‍💻 Autor
+## 📌 Requisitos  
 
-Feito com ☕ e 🧠 por **Niedson Emanoel** — para mim e para todos os estudantes de medicina que amam tecnologia.
+- Python 3.9+  
+- [FFmpeg](https://ffmpeg.org/download.html)  
+- 8GB RAM (recomendado)  
+- Opcional: GPU CUDA para acelerar o Whisper  
+
+---
+
+## 👨‍💻 Autor  
+
+Feito com ☕ e 🧠 por **Niedson Emanoel**  
+> Para mim e para todos os estudantes de medicina que acreditam no poder da tecnologia para aprender melhor.  

@@ -55,5 +55,4 @@ def generate_questions(
         return Questoes
     
     except Exception as e:
-        logger.exception("Erro ao gerar Questoes.")
-        raise RuntimeError(f"Erro ao gerar Questoes: {e}")
+        return ''
