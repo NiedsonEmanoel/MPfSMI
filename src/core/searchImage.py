@@ -14,13 +14,12 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-chromePath = ''
+
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Executa o Chrome em modo headless
 chrome_options.add_argument("--no-sandbox")  # Necessário para ambientes sem interface gráfica  
 
-chrome_options.binary_location = chromePath
 driver = webdriver.Chrome(options=chrome_options)
 
 def pegar_imagens_com_selenium(pesquisa):

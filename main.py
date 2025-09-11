@@ -25,15 +25,7 @@ with open(".streamlit/config.toml", "w") as f:
 st.set_page_config(page_title="MPfSML", page_icon="🧠")
 
 # Remover espaços superiores e elementos de Streamlit
-st.markdown("""
-<style>
-.css-1egvi7u {margin-top: -4rem;}
-.css-qrbaxs, .css-15tx938 {min-height: 0.0rem;}
-.css-znku1x a {color: #9d03fc;}  /* Link color (ambos temas) */
-.stSpinner > div > div {border-top-color: #9d03fc;}
-header, #MainMenu, footer {visibility: hidden;}
-</style>
-""", unsafe_allow_html=True)
+#st.markdown("""<style>.css-1egvi7u {margin-top: -4rem;}.css-qrbaxs, .css-15tx938 {min-height: 0.0rem;}.css-znku1x a {color: #9d03fc;}  /* Link color (ambos temas) */.stSpinner > div > div {border-top-color: #9d03fc;}header, #MainMenu, footer {visibility: hidden;}</style>""", unsafe_allow_html=True)
 
 # =======================
 # 🔑 AUTENTICAÇÃO DA API
@@ -158,6 +150,7 @@ def gerar_materiais(transcricao, api_key, nome_base, status):
 
     st.write("📝 Criando resumo...")
     resume_markdown = resume.generate_resume(transcricao=transcricao, apikey=api_key)
+    
     pdfExport.gerar_pdf_markdown(resume_markdown, pasta_destino=temp_dir, nome_pdf='resumo.pdf')
 
     st.write("❓ Criando questões...")
@@ -178,7 +171,7 @@ def gerar_materiais(transcricao, api_key, nome_base, status):
     status.update(
         label="✅ Processamento concluído!",
         state="complete",
-        expanded=False
+        expanded=True
     )
 
     with open(zip_path, "rb") as f:
