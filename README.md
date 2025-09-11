@@ -18,7 +18,7 @@ Tudo isso com **IA Gemini (Google)** e transcrição de áudio via **Whisper**.
 - 🃏 **Flashcards em `.apkg` para Anki**, prontos para revisão.  
 - 📦 **Download em ZIP** contendo todos os materiais gerados.  
 - 🚀 **Interface amigável em Streamlit**, sem necessidade de usar terminal.  
-
+![Tela do MPfSMl](https://raw.githubusercontent.com/NiedsonEmanoel/MPfSMI/refs/heads/main/img/home.png)
 ---
 
 ## 🧭 Visão Geral do Fluxo do MPfSMl
