@@ -1,31 +1,59 @@
-FROM python:3.11-buster
+# ==========================
+# Etapa 1: Imagem base com CUDA
+# ==========================
+FROM nvidia/cuda:12.1.1-runtime-ubuntu22.04
 
+# Evitar prompts interativos
+ENV DEBIAN_FRONTEND=noninteractive
+
+# ==========================
+# Etapa 2: Dependências do sistema
+# ==========================
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-dev \
+    ffmpeg \
+    wkhtmltopdf \
+    build-essential \
+    libffi-dev \
+    libcairo2 \
+    pango1.0-tools \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgdk-pixbuf2.0-0 \
+    shared-mime-info \
+    fonts-dejavu \
+    && rm -rf /var/lib/apt/lists/*
+
+# ==========================
+# Etapa 3: Diretório de trabalho
+# ==========================
 WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        curl \
-        git \
-        ffmpeg \
-        libxrender1 \
-        libfontconfig1 \
-        libjpeg62-turbo \
-        xfonts-base \
-        xfonts-75dpi \
-        fonts-dejavu \
-    && curl -LO https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.6/wkhtmltox_0.12.6-1.buster_amd64.deb \
-    && apt install -y ./wkhtmltox_0.12.6-1.buster_amd64.deb \
-    && rm wkhtmltox_0.12.6-1.buster_amd64.deb \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# ==========================
+# Etapa 4: Dependências Python
+# ==========================
+COPY requirements.txt .
 
+# Instalar PyTorch GPU + dependências do projeto
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ==========================
+# Etapa 5: Copiar código
+# ==========================
 COPY . .
 
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# ==========================
+# Etapa 6: Configuração Streamlit
+# ==========================
+ENV PORT=8080
+ENV STREAMLIT_SERVER_PORT=$PORT
+ENV STREAMLIT_SERVER_ENABLE_CORS=false
+ENV STREAMLIT_SERVER_HEADLESS=true
+ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
 
-EXPOSE 8080
-
-HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
-
-ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
+# ==========================
+# Etapa 7: Executar
+# ==========================
+CMD ["streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]

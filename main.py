@@ -20,7 +20,8 @@ from src.core import (
 
 os.makedirs(".streamlit", exist_ok=True)
 with open(".streamlit/config.toml", "w") as f:
-    f.write('[theme]\nbase="light"\n')
+    f.write(
+        '[theme]\nbase="light"\n\n[server]\nmaxUploadSize = 400')
 
 st.set_page_config(page_title="MPfSML", page_icon="🧠")
 
@@ -99,9 +100,9 @@ def processar_conteudo(api_key):
             audio_bytes = uploaded_file.read()
             file_size_mb = len(audio_bytes) / (1024 * 1024)
 
-            if file_size_mb > 1024:
-                st.error(f"❌ Arquivo de {file_size_mb:.2f} MB excede o limite de 1 GB.")
-                st.stop()
+#            if file_size_mb > 1024:
+#                st.error(f"❌ Arquivo de {file_size_mb:.2f} MB excede o limite de 1 GB.")
+#                st.stop()
 
             with tempfile.NamedTemporaryFile(delete=False, suffix=f".{uploaded_file.name.split('.')[-1]}") as tmp:
                 audioname = uploaded_file.name.split('.')[0]
@@ -111,6 +112,8 @@ def processar_conteudo(api_key):
             with st.status('🔄 Processando o áudio...', expanded=True) as status:
                 st.write("🎚️ Transcrevendo o áudio...")
                 with_time, no_time = transcription_whisper.transcrever_audio(temp_audio_path, modelo=modelo)
+                with open("last_transcription.txt", "w", encoding="utf-8") as f:
+                    f.write(no_time)
                 gerar_materiais(no_time, api_key, audioname, status)
                 os.remove(temp_audio_path)
 
