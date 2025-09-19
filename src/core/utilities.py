@@ -11,9 +11,42 @@ import nltk
 from nltk.corpus import stopwords
 import string
 import logging
+import re
+from nltk.tokenize import word_tokenize
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Baixar os recursos necessários uma vez
+nltk.download('punkt')
+nltk.download('stopwords')
+
+# Define stopwords em português
+stop_words = set(stopwords.words('portuguese'))
+
+def limpar_transcricao(texto):
+    # Remove qualquer timestamp no formato:
+    # [00:19], [00:19 - 00:29], [01:02:03 - 01:02:10], etc.
+    texto_sem_timestamps = re.sub(r'\[\s*\d{1,2}:\d{2}(?::\d{2})?\s*(-\s*\d{1,2}:\d{2}(?::\d{2})?)?\s*\]', '', texto)
+    
+    # Tokeniza e transforma em minúsculas
+    palavras = word_tokenize(texto_sem_timestamps.lower(), language='portuguese')
+    
+    # Remove stopwords e pontuações
+    palavras_filtradas = [p for p in palavras if p.isalnum() and p not in stop_words]
+    
+    return ' '.join(palavras_filtradas)
+
+# 🔍 Exemplo de uso:
+transcricao = """
+[00:19 - 00:29] Isso é apenas um exemplo de transcrição com algumas palavras comuns.
+[01:02:03 - 01:02:10] Outro trecho com tempo mais longo.
+[00:45] E aqui só tem um timestamp simples.
+"""
+
+resultado = limpar_transcricao(transcricao)
+print(resultado)
+
 
 def load_file_content(file_path: str, description: str = "arquivo") -> str:
     """
